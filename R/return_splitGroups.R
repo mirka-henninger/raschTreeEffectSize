@@ -5,8 +5,7 @@ return_splitGroups <- function(node, datFitted){
     res <- paste("node", ids, sep = "")
   }
 
-  temp <- lapply(innerNodes, get_splitGroup, datFitted)
-  names(temp) <- lapply(innerNodes, get_id)
-  res <- cbind(datFitted, temp)
-  return(res)
+  splitGroups <- lapply(innerNodes, get_splitGroup, datFitted)
+  names(splitGroups) <- lapply(innerNodes, get_id)
+  return(splitGroups)
 }
