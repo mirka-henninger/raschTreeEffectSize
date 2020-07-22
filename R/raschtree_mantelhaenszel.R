@@ -1,12 +1,9 @@
-use_MH <- function (object, type = "mantelhaenszel", stop = "A", ...)
+raschtree_mantelhaenszel <- function (formula, data, stop = "A", purification = "none", ...)
 {
-  if (type != "mantelhaenszel") {
-    warning("Unknown specification of 'type'")
-    return(object)
-  }
-  if(type == "mantelhaenszel" & length(object) > 1){
-    MH <- get_mantelHaenszel(object)
-    pok <- lapply(MH, function(x){all(x$classification == stop)})
+  object <- raschtree(formula, data = data)
+  if(length(object) > 1){
+    MH <- get_mantelHaenszel(object, stop = stop, purification = purification)
+    pok <- sapply(MH, function(x){all(x$classification == stop)})
     pok <- pok[pok == TRUE]
     pnode <- sub(pattern = "node", x = names(pok), replacement = "")
   }

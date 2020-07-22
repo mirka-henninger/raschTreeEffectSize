@@ -11,10 +11,6 @@ NPI <- NPI[,-c(2:41)]
 NPI <- subset(NPI, rowMeans(resp, na.rm = TRUE) > 0 & + rowMeans(resp, na.rm = TRUE) < 1)
 NPI$gender <- factor(NPI$gender)
 
-temp <- function(objfun, df, nobs){return(TRUE)}
+raschTree <- raschtree_mantelhaenszel(resp ~ age + gender, data = NPI, stop = "A", purification = "2step")
 
-(raschTree <- raschtree(resp ~ age + gender, data = NPI))
-
-shorterTree <- use_MH(raschTree)
 plot(raschTree)
-plot(shorterTree)
