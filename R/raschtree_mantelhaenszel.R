@@ -16,5 +16,5 @@ raschtree_mantelhaenszel <- function (formula, data, stop = "A", purification = 
   tmnl <- sapply(kids, is.null)
   id <- seq_along(nd)
   check <- sapply(id, function(i) !tmnl[i] && all(tmnl[kids[[i]]]))
-  return(object)
+  return(list(raschtree = object, mantelHaenszel = MH))
 }

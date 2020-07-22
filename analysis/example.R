@@ -13,4 +13,4 @@ NPI$gender <- factor(NPI$gender)
 
 raschTree <- raschtree_mantelhaenszel(resp ~ age + gender, data = NPI, stop = "A", purification = "2step")
 
-plot(raschTree)
+plot(raschTree$raschtree)
