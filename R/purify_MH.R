@@ -1,3 +1,12 @@
+#' Performs purification of the Mantel-Haenszel odds ratio in the Delta-scale
+#'
+#' @param dat A dataframe with dichotomous item responses
+#' @param splitGroup An indicator of the two groups for which DIF analyses should be performed
+#' @param sums A sum score used as a matching criterion for computing the Mantel Haenszel statistic
+#' @param MHstat A vector or dataframe including the Mantel-Haenszel odds ratio in the Delta-scale
+#' @param whichMH a vector containing the item numbers of items with Delta-MH > 1
+#'
+#' @return A list with purified the Mantel-Haenszel odds ratio in the Delta-scale, standard deviation of purified the Mantel-Haenszel odds ratio in the Delta-scale, a vector indicating with items were purified
 purify_MH <- function(dat, group, sums, MHstat, whichMH = whichMH){
   # purified MH for no DIF items
   tempDat <- dat[, ! (colnames(dat) %in% c("sums","group"))]

@@ -1,4 +1,16 @@
-calculate_mantelHaenszel <- function(dat, splitGroup, sums, purification = "none", ...){
+#' Calculates the Mantel-Haenszel statistic for Differential Item Functioning (DIF)
+#'
+#' @param dat A dataframe with dichotomous item responses
+#' @param splitGroup An indicator of the two groups for which DIF analyses should be performed
+#' @param sums A sum score used as a matching criterion for computing the Mantel Haenszel statistic
+#' @param purification A character indicating the type of purification that is used on the Mantel Haenszel statistic. Options are "none", "2step", or "iterative"
+#'
+#' @return A list with the Mantel-Haenszel effect size measure in the Delta scale, the classification based on the ETS guidelines and information on purification and convergence of purification if iterative purification was done.
+calculate_mantelHaenszel <- function(dat, splitGroup, sums, purification, ...){
+  if (! purification %in% c("none", "2step", "iterative")){
+    print("Argument 'purification' is neither 'none', '2step', nor 'iterative'. No purification is done")
+    purification <- "none"
+  }
   counter <- 0
   removeNA <- !is.na(as.vector(splitGroup))
 

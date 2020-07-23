@@ -1,3 +1,12 @@
+#' Fits raschtree based on the psychotree package with additional options for stopping based on the Mantel-Haenszel effect size measure
+#'
+#'@param formula
+#'@param data
+#'@param stopping A logical indicator whether stopping based on the Mantel-Haenszel effect size measure should be performed. Default is TRUE
+#'@param stopkrit A character indicating the stopping criterion. Options are "A", "B", "C" or combinations of these. Stopping is done when all items in follow-up nodes fall into the stopping criterion.
+#'@param purification A character indicating the type of purification that should be done. Options are "none", "2step", or "iterative".
+#'
+#'@return A list with two entries: raschtree object and information on the Mantel-Haenszel statistic
 raschtree_mantelhaenszel <- function (formula, data, stopping = TRUE, stopkrit = "A", purification, ...)
 {
   object <- raschtree(formula, data = data)

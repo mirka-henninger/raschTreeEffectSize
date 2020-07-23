@@ -1,3 +1,4 @@
+#' Returns the split groups for a node in a tree object
 get_splitGroup <- function(node, datFitted){
   if(is_terminalNode(node) == TRUE){
     errorCondition("not possible")

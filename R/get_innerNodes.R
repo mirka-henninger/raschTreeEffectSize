@@ -1,3 +1,4 @@
+#' Function that returns the inner nodes of a tree object
 get_innerNodes <- function(node){
   if(is_terminalNode(node)){
     res <- list()
