@@ -39,7 +39,7 @@ calculate_mantelHaenszel <- function(dat, splitGroup, sums, purification = "none
   names(MHclassi) <- paste("item", 1:ncol(dat), sep = "")
   result <- list(mantelHaenszel = MH,
                  classification = c(MHclassi),
-                 anchor = purification,
+                 purification = purification,
                  purificationCounter = counter
   )
   return(result)
