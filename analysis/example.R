@@ -12,10 +12,18 @@ NPI <- subset(NPI, rowMeans(resp, na.rm = TRUE) > 0 & + rowMeans(resp, na.rm = T
 NPI$gender <- factor(NPI$gender)
 NPI <- dplyr::sample_n(NPI, 3000)
 
-raschTree <- raschtree_mantelhaenszel(resp ~ age + gender, data = NPI,
-                                      stopping = TRUE,
-                                      stopkrit = c("A"),
-                                      purification = "2step")
 
-plot(raschTree$raschtree)
-raschTree$mantelHaenszel
+stopfun <- function(z, kidids) {
+  temp <- list(z, kidids)
+  temp$bla <- TRUE
+  return(temp$bla)
+}
+
+stopfun(z = NULL, kidids = NULL)
+
+raschTree <- raschtree(resp ~ age + gender, data = NPI, verbose = TRUE, stopfun = stopfun)
+
+plot(raschTree)
+str(raschTree)
+plot(raschTree_MH$raschtree)
+raschTree_MH$mantelHaenszel
