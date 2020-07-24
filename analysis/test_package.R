@@ -21,19 +21,33 @@ MH <- get_mantelHaenszel(raschTree, purification = "iterative")
 MH_sum <- summary_mantelhaenszel(MH)
 apply(MH_sum$classification,2,table)
 
-make_numeric <- function(x){
-  ifelse(x == "A",1, 3)
+make_numeric <- function(x, a){
+  ifelse(x == "A", 1, a)
+}
+make_pch <- function(x){
+  ifelse(x == "C", 23, 19)
 }
 
 col <- list(
-  "4" = make_numeric(MH$node3$classification),
-  "5" = make_numeric(MH$node3$classification),
-  "6" = make_numeric(MH$node2$classification),
-  "9" = make_numeric(MH$node8$classification),
-  "11" = make_numeric(MH$node10$classification),
-  "12" = make_numeric(MH$node10$classification),
-  "13" = make_numeric(MH$node7$classification)
+  "4" = make_numeric(MH$node2$classification, 2),
+  "5" = make_numeric(MH$node2$classification, 2),
+  "6" = make_numeric(MH$node2$classification, 3),
+  "9" = make_numeric(MH$node7$classification, 4),
+  "11" = make_numeric(MH$node7$classification, 4),
+  "12" = make_numeric(MH$node7$classification, 4),
+  "13" = make_numeric(MH$node7$classification, 5)
+)
+pch <- list(
+  "4" =  make_pch(MH$node2$classification),
+  "5" =  make_pch(MH$node2$classification),
+  "6" =  make_pch(MH$node2$classification),
+  "9" =  make_pch(MH$node7$classification),
+  "11" = make_pch(MH$node7$classification),
+  "12" = make_pch(MH$node7$classification),
+  "13" = make_pch(MH$node7$classification)
 )
 
-plot(raschTree, col = col)
+png(filename="analysis/colored_tree.png", width = 1200, height = 600)
+plot(raschTree, col = col, pch = pch)
+dev.off()
 
