@@ -26,8 +26,8 @@ calculate_mantelHaenszel <- function(dat, splitGroup, sums, purification, ...){
   purify_MH <- function(dat, group, sums, MHstat, whichMH = whichMH){
     # purified MH for no DIF items
     tempDat <- dat[, ! (colnames(dat) %in% c("sums","group"))]
-    tempDat <- tempDat[,abs(MHstat) < 1]
-    sums <- rowSums(tempDat)
+    tempDat <- data.frame(tempDat[,abs(MHstat) < 1])
+    sums <- rowSums(tempDat, na.rm = TRUE)
     temp <- difR::mantelHaenszel(data = dat, member = group, match = sums)
     tempMH <- temp$resAlpha
     tempMHvar <- temp$varLambda
@@ -75,7 +75,7 @@ calculate_mantelHaenszel <- function(dat, splitGroup, sums, purification, ...){
       resultsMH <- purified$resultsMH
       resultsSD <- purified$resultsSD
       counter <- counter + 1
-      if(counter > 1000){break}
+      if(counter > ncol(dat)){break}
     }
   }
   MHclassi <- get_MHclassification(resMH = data.frame(resultsMH), resMHsd = data.frame(resultsSD))
