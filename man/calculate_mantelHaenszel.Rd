@@ -14,6 +14,8 @@ calculate_mantelHaenszel(dat, splitGroup, sums, purification, ...)
 \item{sums}{A sum score used as a matching criterion for computing the Mantel Haenszel statistic}
 
 \item{purification}{A character indicating the type of purification that is used on the Mantel Haenszel statistic. Options are "none", "2step", or "iterative"}
+
+\item{...}{Further arguments}
 }
 \value{
 A list with the Mantel-Haenszel effect size measure in the Delta scale, the classification based on the ETS guidelines and information on purification and convergence of purification if iterative purification was done.

@@ -6,6 +6,12 @@
 \usage{
 summary_mantelhaenszel(x)
 }
+\arguments{
+\item{x}{An object (list) returned from the get_mantelHaenszel.R function}
+}
+\value{
+A list with classification, Mantel-Haenszel odds ratio, purification, and purification counter for each split in the Raschtree
+}
 \description{
 Improves the output of the Mantel Haenszel statistic for the raschtree
 }

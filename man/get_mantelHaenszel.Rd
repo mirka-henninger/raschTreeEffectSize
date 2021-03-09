@@ -10,6 +10,8 @@ get_mantelHaenszel(object, purification, ...)
 \item{object}{An object of type Raschtree}
 
 \item{purification}{A character indicating the type of purification ("none", "2step", "iterative")}
+
+\item{...}{Further arguments}
 }
 \value{
 A list with Mantel-Haenszel effect size, classification, purification type, and convergence if purification was iterative

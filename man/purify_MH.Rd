@@ -9,16 +9,16 @@ purify_MH(dat, group, sums, MHstat, whichMH = whichMH)
 \arguments{
 \item{dat}{A dataframe with dichotomous item responses}
 
+\item{group}{An indicator of the two groups for which DIF analyses should be performed}
+
 \item{sums}{A sum score used as a matching criterion for computing the Mantel Haenszel statistic}
 
 \item{MHstat}{A vector or dataframe including the Mantel-Haenszel odds ratio in the Delta-scale}
 
 \item{whichMH}{a vector containing the item numbers of items with Delta-MH > 1}
-
-\item{splitGroup}{An indicator of the two groups for which DIF analyses should be performed}
 }
 \value{
-A list with purified the Mantel-Haenszel odds ratio in the Delta-scale, standard deviation of purified the Mantel-Haenszel odds ratio in the Delta-scale, a vector indicating with items were purified
+A list with purified the Mantel-Haenszel odds ratio in the Delta-scale, standard deviation of purified the Mantel-Haenszel odds ratio in the Delta-scale, a vector     indicating with items were purified
 }
 \description{
 Performs purification of the Mantel-Haenszel odds ratio in the Delta-scale

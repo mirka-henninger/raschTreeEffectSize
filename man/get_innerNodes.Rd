@@ -6,6 +6,12 @@
 \usage{
 get_innerNodes(node)
 }
+\arguments{
+\item{node}{A node in a Raschtree}
+}
+\value{
+inner nodes of a tree object
+}
 \description{
 Function that returns the inner nodes of a tree object
 }

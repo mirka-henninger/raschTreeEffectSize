@@ -6,6 +6,12 @@
 \usage{
 get_terminalNodes(node)
 }
+\arguments{
+\item{node}{A node in a Raschtree}
+}
+\value{
+terminal nodes of a tree object
+}
 \description{
 Returns the terminal nodes of a tree object
 }

@@ -3,6 +3,7 @@
 #'
 #' @param resMH A vector or dataframe with the Mantel-Haenszel Odds Ratio effect size measure in the Delta scale (-2.35 * log (Mantel-Haenszel estimate of the common odds ratios)) for each item
 #' @param resMHsd A vector or dataframe with the standard deviation of Mantel-Haenszel Odds Ratio effect size measure in the Delta scale for each item (-2.35 * sqrt (the variance of the lambda_MH statistic))
+#' @param ... Further arguments
 #'
 #' @return A vector or dataframe with the corresponding A/B/C classification for each item
 get_MHclassification <- function(resMH, resMHsd, ...){
@@ -24,7 +25,7 @@ get_MHclassification <- function(resMH, resMHsd, ...){
       pVals <- rbind(pVals, sigTest_MantelHaenszel(MH = unlist(resMH[i,]), sdMH = unlist(resMHsd[i,]), tau = tau))
     }
     rownames(pVals) <- rownames(resMH); colnames(pVals) <- colnames(resMH)
-    return(pVals) 
+    return(pVals)
   }
 
   pVals_A <- get_MHpVal(resMH, resMHsd, tau = 0)
@@ -34,4 +35,3 @@ get_MHclassification <- function(resMH, resMHsd, ...){
                             "B"))
   return(MHclassi)
 }
-

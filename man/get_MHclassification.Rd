@@ -11,9 +11,14 @@ get_MHclassification(resMH, resMHsd, ...)
 \item{resMH}{A vector or dataframe with the Mantel-Haenszel Odds Ratio effect size measure in the Delta scale (-2.35 * log (Mantel-Haenszel estimate of the common odds ratios)) for each item}
 
 \item{resMHsd}{A vector or dataframe with the standard deviation of Mantel-Haenszel Odds Ratio effect size measure in the Delta scale for each item (-2.35 * sqrt (the variance of the lambda_MH statistic))}
+
+\item{...}{Further arguments}
 }
 \value{
 A vector or dataframe with the corresponding A/B/C classification for each item
+Computes p-values for the statistical hypothesis testing based on log transformation of the Mantel-Haenszel common odds ratio in the Delta-scale for DIF
+p values of the hypothesis test are need for the classification of DIF items based on the ETS guidelines
+based on Paek & Holland, 2015, Psychometrika
 }
 \description{
 Performs classification of the Mantel-Haenszel effect size measured based on ETS guidelines

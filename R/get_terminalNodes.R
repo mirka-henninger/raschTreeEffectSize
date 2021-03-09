@@ -1,4 +1,7 @@
 #' Returns the terminal nodes of a tree object
+#' @param node A node in a Raschtree
+#'
+#' @return terminal nodes of a tree object
 get_terminalNodes <- function(node){
   if(is_terminalNode(node) == TRUE){
     id <- node$id

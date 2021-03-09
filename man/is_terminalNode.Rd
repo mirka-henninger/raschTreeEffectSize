@@ -6,6 +6,9 @@
 \usage{
 is_terminalNode(node)
 }
+\arguments{
+\item{node}{A node in a Raschtree}
+}
 \description{
 checks whether a node is a terminal node
 }

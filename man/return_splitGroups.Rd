@@ -2,10 +2,19 @@
 % Please edit documentation in R/return_splitGroups.R
 \name{return_splitGroups}
 \alias{return_splitGroups}
-\title{Returns the splitGroups of a raschtree based on the node structure and the allocation of respondents in terminal nodes}
+\title{Returns the splitGroups of a Raschtree based on the node structure and the allocation of respondents in terminal nodes}
 \usage{
 return_splitGroups(node, datFitted)
 }
+\arguments{
+\item{node}{A node in a Raschtree}
+
+\item{datFitted}{A dataframe with data, split variables and fitted groups (end nodes) as returned from partykit::data_party(object)}
+}
+\value{
+Split groups of a node in a Raschtree
+Get the split groups for a node in a tree object
+}
 \description{
-Returns the splitGroups of a raschtree based on the node structure and the allocation of respondents in terminal nodes
+Returns the splitGroups of a Raschtree based on the node structure and the allocation of respondents in terminal nodes
 }
