@@ -61,7 +61,7 @@ calculate_mantelHaenszel <- function(dat, splitGroup, sums, purification, ...){
   resultsMH <- (2.35) * log(tempMH)
   resultsSD <- (2.35) * sqrt(tempMHvar)
   whichMH <- which(abs(resultsMH) >= 1)
-  if (purification == "2step" | purification == "iterative" & length(whichMH) > 0){
+  if ((purification == "2step" | purification == "iterative") & length(whichMH) > 0){
     purified <- purify_MH(dat = dat, group = group, sums = sums, MHstat = resultsMH, whichMH = whichMH)
     resultsMH <- purified$resultsMH
     resultsSD <- purified$resultsSD
