@@ -1,20 +1,19 @@
 Package: raschTreeEffectSize
-Title: What the Package Does (One Line, Title Case)
+Title: Helper functions to use the Mantel-Haenszel effect size measure as a stopping criterion in Raschtrees
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Mirka",
+           family = "Henninger",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+           email = "mail@mirka-henninger.de")
+Description: Helper function to use the Mantel-Haenszel effect size measure as a stopping criterion in Raschtrees.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Depends: 
     psychotree,
     partykit,
+    difR,
     R (>= 2.10)
