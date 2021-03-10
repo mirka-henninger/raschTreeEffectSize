@@ -35,3 +35,47 @@ return_splitGroups <- function(node, datFitted){
   names(splitGroups) <- lapply(innerNodes, get_id)
   return(splitGroups)
 }
+#' Returns the terminal nodes of a tree object
+#' @param node A node in a Raschtree
+#'
+#' @return terminal nodes of a tree object
+get_terminalNodes <- function(node){
+  if(is_terminalNode(node) == TRUE){
+    id <- node$id
+    res <- list(id = id)
+  }
+  if(is_terminalNode(node) == FALSE){
+    children <- kids_node(node)
+    res <- list()
+    for (i in 1:(length(children))){
+      res[[i]] <- get_terminalNodes(children[[i]])
+    }
+    res <- unlist(res)
+  }
+  return(res)
+}
+#' Function that returns the inner nodes of a tree object
+#' @param node A node in a Raschtree
+#'
+#' @return inner nodes of a tree object
+get_innerNodes <- function(node){
+  if(is_terminalNode(node)){
+    res <- list()
+  }
+  if(is_terminalNode(node) == FALSE){
+    children <- kids_node(node)
+    res <- list()
+    for (i in 1:(length(children))){
+      res[[i]] <- get_innerNodes(children[[i]])
+    }
+    res[[length(children)+1]] <- list(node = node)
+    res <- unlist(res, recursive=FALSE)
+  }
+  return(res)
+}
+#' checks whether a node is a terminal node
+#' @param node A node in a Raschtree
+is_terminalNode <- function(node){
+  res <- is.null(kids_node(node))
+  return(res)
+}

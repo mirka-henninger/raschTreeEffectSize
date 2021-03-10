@@ -3,15 +3,14 @@
 #'
 #' @param resMH A vector or dataframe with the Mantel-Haenszel Odds Ratio effect size measure in the Delta scale (-2.35 * log (Mantel-Haenszel estimate of the common odds ratios)) for each item
 #' @param resMHsd A vector or dataframe with the standard deviation of Mantel-Haenszel Odds Ratio effect size measure in the Delta scale for each item (-2.35 * sqrt (the variance of the lambda_MH statistic))
-#' @param ... Further arguments
 #'
 #' @return A vector or dataframe with the corresponding A/B/C classification for each item
-get_MHclassification <- function(resMH, resMHsd, ...){
+get_MHclassification <- function(resMH, resMHsd){
   #' Computes p-values for the statistical hypothesis testing based on log transformation of the Mantel-Haenszel common odds ratio in the Delta-scale for DIF
   #' p values of the hypothesis test are need for the classification of DIF items based on the ETS guidelines
   #' based on Paek & Holland, 2015, Psychometrika
-  get_MHpVal <- function(resMH, resMHsd, tau = 1){
-    sigTest_MantelHaenszel <- function(MH = 1, sdMH = .5, tau = 1){
+  get_MHpVal <- function(resMH, resMHsd, tau){
+    sigTest_MantelHaenszel <- function(MH = 1, sdMH = .5, tau){
       # schervish <- pnorm((-tau - abs(MH)) / sdMH) + pnorm((tau - abs(MH)) / sdMH)
       # return(schervish)
       df <- 1

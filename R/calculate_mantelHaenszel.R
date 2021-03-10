@@ -42,7 +42,7 @@ calculate_mantelHaenszel <- function(dat, splitGroup, sums, purification, ...){
       resultsMH <- purified$resultsMH
       resultsSD <- purified$resultsSD
       counter <- counter + 1
-      if(counter > ncol(dat)){break}
+      if(counter >= ncol(dat)){break}
     }
   }
   MHclassi <- get_MHclassification(resMH = data.frame(resultsMH), resMHsd = data.frame(resultsSD))
@@ -58,4 +58,3 @@ calculate_mantelHaenszel <- function(dat, splitGroup, sums, purification, ...){
   )
   return(result)
 }
-

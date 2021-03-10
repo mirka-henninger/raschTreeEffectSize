@@ -4,7 +4,7 @@
 \alias{get_mantelHaenszel}
 \title{Function that returns the Mantel-Haenszel effect size measure of a Raschtree object}
 \usage{
-get_mantelHaenszel(object, purification, by = "node", ...)
+get_mantelHaenszel(object, purification, by = "node")
 }
 \arguments{
 \item{object}{An object of type Raschtree}
@@ -12,8 +12,6 @@ get_mantelHaenszel(object, purification, by = "node", ...)
 \item{purification}{A character indicating the type of purification ("none", "2step", "iterative")}
 
 \item{by}{A character either "node" or "type" defining the structure of the function output}
-
-\item{...}{Further arguments}
 }
 \value{
 If by = "node": a list with one entry for each node; If by = "type": a list with entries Mantel-Haenszel effect size, classification, purification type, and purificationCounter
