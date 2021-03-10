@@ -3,7 +3,6 @@
 export(calculate_mantelHaenszel)
 export(get_mantelHaenszel)
 export(mantelHaenszel)
-export(summary_mantelhaenszel)
 import(difR)
 import(partykit)
 import(psychotree)
