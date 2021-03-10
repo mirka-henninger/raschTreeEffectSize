@@ -16,8 +16,8 @@ A function that takes the argument purification and can be used as a value for t
 Helper function to display the ETS Mantel-Haenszel classification summary in each inner node of the Raschtree
 }
 \examples{
-data("DIFSim", package = "psychotree") # create artificial data
-rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE) # fit Raschtree model
-plot(rt, inner_panel = show_ETSMH(purification = "iterative")) # plot Raschtree with summary of ETS classification for each inner node
+data("DIFSim", package = "psychotree")
+rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE)
+plot(rt, inner_panel = show_ETSMH(purification = "iterative"))
 
 }

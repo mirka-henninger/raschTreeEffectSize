@@ -4,9 +4,9 @@
 #' @return A function that takes the argument purification and can be used as a value for the argument 'inner_panel' in plot.raschtree()
 #'
 #' @examples
-#' data("DIFSim", package = "psychotree") # create artificial data
-#' rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE) # fit Raschtree model
-#' plot(rt, inner_panel = show_ETSMH(purification = "iterative")) # plot Raschtree with summary of ETS classification for each inner node
+#' data("DIFSim", package = "psychotree")
+#' rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE)
+#' plot(rt, inner_panel = show_ETSMH(purification = "iterative"))
 #'
 #' @export
 show_ETSMH <- function(purification){
