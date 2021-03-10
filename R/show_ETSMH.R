@@ -7,6 +7,8 @@
 #' data("DIFSim", package = "psychotree") # create artificial data
 #' rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE) # fit Raschtree model
 #' plot(rt, inner_panel = show_ETSMH(purification = "iterative")) # plot Raschtree with summary of ETS classification for each inner node
+#'
+#' @export
 show_ETSMH <- function(purification){
   print(paste("Purification:", purification, sep = " "))
   inner_show_ETSMH <- function(obj, id = TRUE, pval = TRUE, abbreviate = FALSE, fill = "white", gp = gpar())
