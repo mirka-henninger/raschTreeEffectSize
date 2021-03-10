@@ -6,7 +6,7 @@
 #'
 #' @return A function that can be used for the stopFun argument in the Raschtree
 #' @export
-mantelHaenszel <- function(purification, stopCrit = c("A")){
+stopFun_mantelHaenszel <- function(purification, stopCrit = c("A")){
   stopfun <- function(y, kidids){
     dat <- y
     group <- kidids - 1

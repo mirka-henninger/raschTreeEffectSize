@@ -2,7 +2,7 @@
 
 export(calculate_mantelHaenszel)
 export(get_mantelHaenszel)
-export(mantelHaenszel)
+export(stopFun_mantelHaenszel)
 import(difR)
 import(partykit)
 import(psychotree)
