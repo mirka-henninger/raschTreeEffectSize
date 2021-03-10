@@ -8,7 +8,7 @@ It can be installed like an R package using the devtools-package:
 ``` r
 install.packages("devtools")
 devtools::install_github("mirka-henninger/raschTreeEffectSize")
-library(InterpretationMethods)
+library(raschTreeEffectSize)
 ```
 
 ## References
