@@ -69,8 +69,7 @@ calculate_mantelHaenszel <- function(dat, splitGroup, sums, purification, ...){
 #' @return A list with purified the Mantel-Haenszel odds ratio in the Delta-scale, standard deviation of purified the Mantel-Haenszel odds ratio in the Delta-scale, a vector     indicating with items were purified
 purify_MH <- function(dat, group, sums, MHstat, whichMH = whichMH){
   # purified MH for no DIF items
-  tempDat <- dat
-  tempDat <- data.frame(tempDat[,abs(MHstat) < 1])
+  tempDat <- data.frame(dat[,abs(MHstat) < 1])
   sums <- rowSums(tempDat, na.rm = TRUE)
   temp <- difR::mantelHaenszel(data = dat, member = group, match = sums)
   tempMH <- temp$resAlpha
