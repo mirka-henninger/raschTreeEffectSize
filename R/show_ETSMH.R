@@ -1,27 +1,35 @@
 #' Helper function to display the ETS Mantel-Haenszel classification summary in each inner node of the Raschtree
+#' @description  This function is largely copied from partykit:::node_inner and adapted to display larger inner nodes with corresponding Mantel-Haenszel classification summaries
 #'
-#' @param purification A character indicating the type of purification ("none", "2step", "iterative"
-#' @return A function that takes the argument purification and can be used as a value for the argument 'inner_panel' in plot.raschtree()
+#' @param object An object of class raschtree that has the mantelHaenszel statistic added to it. See @examples
+#' @param id Argument copied from partykit:::node_inner
+#' @param pval Argument copied from partykit:::node_inner
+#' @param abbreviate Argument copied from partykit:::node_inner
+#' @param fill Argument copied from partykit:::node_inner
+#' @param gp Argument copied from partykit:::node_inner
+#' @return A function that can be used as a value for the argument 'inner_panel' in plot.raschtree()
 #'
 #' @examples
+#' \dontrun{
 #' data("DIFSim", package = "psychotree")
 #' rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE)
 #' rt_MH <- add_mantelHaenszel(rt, purification = "iterative")
 #' plot(rt_MH, inner_panel = show_ETSMH)
+#' }
 #'
 #' @export
-show_ETSMH <- function(obj, id = TRUE, pval = TRUE, abbreviate = FALSE, fill = "white", gp = gpar())
+show_ETSMH <- function(object, id = TRUE, pval = TRUE, abbreviate = FALSE, fill = "white", gp = gpar())
 {
   # calculate ETS-MH
-  MH <- obj$info$mantelHaenszel
+  MH <- object$info$mantelHaenszel
   tabMH <- data.frame(apply(MH$classification, 2, table))
   tabMH <- apply(tabMH, 2, function(x) paste(rownames(tabMH), ":", x, "; ", sep = ""))
   tabMH <- apply(tabMH, 2, function(x) paste(c(rep("_", 14), "\nETS-MH: ", x), collapse = ""))
   print(paste("ETS-MH are based on", MH$purification[1], "purification", sep = " "))
 
   # original node_inner function
-  meta <- obj$data
-  nam <- names(obj)
+  meta <- object$data
+  nam <- names(object)
 
   extract_label <- function(node) {
     if(is.terminal(node)) return(rep.int("", 2L))
@@ -58,7 +66,7 @@ show_ETSMH <- function(obj, id = TRUE, pval = TRUE, abbreviate = FALSE, fill = "
     return(lab)
   }
 
-  nstr <- maxstr(node_party(obj))
+  nstr <- maxstr(node_party(object))
   if(nchar(nstr) < 6) nstr <- "aAAAAa"
 
   ### panel function for the inner nodes

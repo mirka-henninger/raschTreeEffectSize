@@ -20,9 +20,11 @@ If by = "node": a list with one entry for each node; If by = "type": a list with
 Function that returns the Mantel-Haenszel effect size measure of a Raschtree object
 }
 \examples{
+\dontrun{
 data("DIFSim", package = "psychotree")
 rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
 MH <- get_mantelHaenszel(rt, purification = "iterative", by = "type")
 MH
+}
 
 }

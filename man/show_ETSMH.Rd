@@ -5,7 +5,7 @@
 \title{Helper function to display the ETS Mantel-Haenszel classification summary in each inner node of the Raschtree}
 \usage{
 show_ETSMH(
-  obj,
+  object,
   id = TRUE,
   pval = TRUE,
   abbreviate = FALSE,
@@ -14,18 +14,30 @@ show_ETSMH(
 )
 }
 \arguments{
-\item{purification}{A character indicating the type of purification ("none", "2step", "iterative"}
+\item{object}{An object of class raschtree that has the mantelHaenszel statistic added to it. See @examples}
+
+\item{id}{Argument copied from partykit:::node_inner}
+
+\item{pval}{Argument copied from partykit:::node_inner}
+
+\item{abbreviate}{Argument copied from partykit:::node_inner}
+
+\item{fill}{Argument copied from partykit:::node_inner}
+
+\item{gp}{Argument copied from partykit:::node_inner}
 }
 \value{
-A function that takes the argument purification and can be used as a value for the argument 'inner_panel' in plot.raschtree()
+A function that can be used as a value for the argument 'inner_panel' in plot.raschtree()
 }
 \description{
-Helper function to display the ETS Mantel-Haenszel classification summary in each inner node of the Raschtree
+This function is largely copied from partykit:::node_inner and adapted to display larger inner nodes with corresponding Mantel-Haenszel classification summaries
 }
 \examples{
+\dontrun{
 data("DIFSim", package = "psychotree")
 rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE)
 rt_MH <- add_mantelHaenszel(rt, purification = "iterative")
 plot(rt_MH, inner_panel = show_ETSMH)
+}
 
 }
