@@ -10,6 +10,7 @@
 #' @import psychotree
 #' @import partykit
 #' @import difR
-#' @importFrom stats pchisq
+#' @import grid
+#' @importFrom stats pchisq rt setNames
 #'
 NULL
