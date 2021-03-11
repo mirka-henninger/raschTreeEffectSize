@@ -22,8 +22,8 @@ Function that returns the Mantel-Haenszel effect size measure of a Raschtree obj
 \examples{
 \dontrun{
 data("DIFSim", package = "psychotree")
-rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
-MH <- get_mantelHaenszel(rt, purification = "iterative", by = "type")
+RT <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
+MH <- get_mantelHaenszel(RT, purification = "iterative", by = "type")
 MH
 }
 

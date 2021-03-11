@@ -8,12 +8,12 @@
 #' @examples
 #' \dontrun{
 #' data("DIFSim", package = "psychotree")
-#' rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
-#' rt_MH <- add_mantelHaenszel(rt, purification = "iterative")
-#' rt_MH$info$mantelHaenszel
+#' RT <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
+#' RT_MH <- add_mantelHaenszel(RT, purification = "iterative")
+#' RT_MH$info$mantelHaenszel
 #' }
 #' @export
 add_mantelHaenszel <- function(object, purification){
-  object$info$mantelHaenszel <- get_mantelHaenszel(rt, purification = purification, by = "type")
+  object$info$mantelHaenszel <- get_mantelHaenszel(object, purification = purification, by = "type")
   return(object)
 }

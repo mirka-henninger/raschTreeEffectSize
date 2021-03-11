@@ -5,11 +5,12 @@
 #' @param by A character either "node" or "type" defining the structure of the function output
 #'
 #' @return If by = "node": a list with one entry for each node; If by = "type": a list with entries Mantel-Haenszel effect size, classification, purification type, and purificationCounter
+#'
 #' @examples
-#'\dontrun{
+#' \dontrun{
 #' data("DIFSim", package = "psychotree")
-#' rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
-#' MH <- get_mantelHaenszel(rt, purification = "iterative", by = "type")
+#' RT <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
+#' MH <- get_mantelHaenszel(RT, purification = "iterative", by = "type")
 #' MH
 #' }
 #'

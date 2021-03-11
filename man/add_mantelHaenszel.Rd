@@ -20,8 +20,8 @@ Function that saves Mantel-Haenszel effect size measures of a Raschtree into the
 \examples{
 \dontrun{
 data("DIFSim", package = "psychotree")
-rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
-rt_MH <- add_mantelHaenszel(rt, purification = "iterative")
-rt_MH$info$mantelHaenszel
+RT <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
+RT_MH <- add_mantelHaenszel(RT, purification = "iterative")
+RT_MH$info$mantelHaenszel
 }
 }

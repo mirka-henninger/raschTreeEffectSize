@@ -35,9 +35,9 @@ This function is largely copied from partykit:::node_inner and adapted to displa
 \examples{
 \dontrun{
 data("DIFSim", package = "psychotree")
-rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE)
-rt_MH <- add_mantelHaenszel(rt, purification = "iterative")
-plot(rt_MH, inner_panel = show_ETSMH)
+RT <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE)
+RT_MH <- add_mantelHaenszel(RT, purification = "iterative")
+plot(RT_MH, inner_panel = show_ETSMH)
 }
 
 }
