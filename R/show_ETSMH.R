@@ -21,7 +21,10 @@
 #' @export
 show_ETSMH <- function(object, id = TRUE, pval = TRUE, abbreviate = FALSE, fill = "white", gp = gpar())
 {
-  # calculate ETS-MH
+  # check whether Delta-MH is saved in the Raschtree object
+  if(is.null(object$info$mantelHaenszel))
+    warning("No Mantel-Haenszel classification found. Please use the add_mantelHaenszel function to add Mantel-Haenszel effect size measures to the Raschtree object")
+  # extract ETS-MH
   MH <- object$info$mantelHaenszel
   tabMH <- data.frame(apply(MH$classification, 2, table))
   tabMH <- apply(tabMH, 2, function(x) paste(rownames(tabMH), ":", x, "; ", sep = ""))
