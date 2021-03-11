@@ -6,18 +6,19 @@
 #' @examples
 #' data("DIFSim", package = "psychotree")
 #' rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE)
-#' plot(rt, inner_panel = show_ETSMH(purification = "iterative"))
+#' rt_MH <- add_mantelHaenszel(rt, purification = "iterative")
+#' plot(rt_MH, inner_panel = show_ETSMH(rt_MH))
 #'
 #' @export
-show_ETSMH <- function(purification){
-  print(paste("Purification:", purification, sep = " "))
+show_ETSMH <- function(object){
   inner_show_ETSMH <- function(obj, id = TRUE, pval = TRUE, abbreviate = FALSE, fill = "white", gp = gpar())
   {
     # calculate ETS-MH
-    MH <- get_mantelHaenszel(obj, purification = purification, by = "type")
+    MH <- object$info$mantelHaenszel
     tabMH <- data.frame(apply(MH$classification, 2, table))
     tabMH <- apply(tabMH, 2, function(x) paste(rownames(tabMH), ":", x, "; ", sep = ""))
     tabMH <- apply(tabMH, 2, function(x) paste(c(rep("_", 14), "\nETS-MH: ", x), collapse = ""))
+    print(paste("Purification:", MH$purification[1], sep = " "))
 
     # original node_inner function
     meta <- obj$data

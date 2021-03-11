@@ -12,7 +12,7 @@ add_mantelHaenszel(object, purification)
 \item{purification}{A character indicating the type of purification ("none", "2step", "iterative")}
 }
 \value{
-The Raschtree object with 'info' extended by a list named mantelHaenszel with one entry for each node containing entries Mantel-Haenszel effect size, classification, purification type, and purificationCounter
+The Raschtree object with 'info' extended by a list named mantelHaenszel containing entries Mantel-Haenszel effect size, classification, purification type, and purificationCounter
 }
 \description{
 Function that saves Mantel-Haenszel effect size measures of a Raschtree into the Raschtree object
