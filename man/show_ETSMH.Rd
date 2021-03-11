@@ -4,7 +4,14 @@
 \alias{show_ETSMH}
 \title{Helper function to display the ETS Mantel-Haenszel classification summary in each inner node of the Raschtree}
 \usage{
-show_ETSMH(object)
+show_ETSMH(
+  obj,
+  id = TRUE,
+  pval = TRUE,
+  abbreviate = FALSE,
+  fill = "white",
+  gp = gpar()
+)
 }
 \arguments{
 \item{purification}{A character indicating the type of purification ("none", "2step", "iterative"}
@@ -19,6 +26,6 @@ Helper function to display the ETS Mantel-Haenszel classification summary in eac
 data("DIFSim", package = "psychotree")
 rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE)
 rt_MH <- add_mantelHaenszel(rt, purification = "iterative")
-plot(rt_MH, inner_panel = show_ETSMH(rt_MH))
+plot(rt_MH, inner_panel = show_ETSMH)
 
 }
