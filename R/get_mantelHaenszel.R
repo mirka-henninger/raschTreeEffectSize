@@ -16,6 +16,11 @@
 #'
 #' @export
 get_mantelHaenszel <- function(object, purification, by = "node"){
+  # check whether object is of type Raschtree, modelparty, and party
+  if(!(all(class(object) %in% c("raschtree", "modelparty", "party"))))
+    stop("Object must be an Raschtree object (as returned from the raschtree function")
+
+  # extract information from Raschtree
   ids <- which(!(partykit::nodeids(object, terminal = FALSE) %in% partykit::nodeids(object, terminal = TRUE)))
   datFitted <- partykit::data_party(object) # dataframe with data, split variables and fitted groups (end nodes)
   splits <- partykit::node_party(object) # where the splits are
