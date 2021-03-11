@@ -11,13 +11,13 @@
 #' data("DIFSim", package = "psychotree")
 #' rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE)
 #' rt_MH <- add_mantelHaenszel(rt, purification = "iterative")
-#' plot(rt_MH, terminal_panel = color_byNode(nodeID = 1, color = c("blue", "orange", "darkgreen")))
+#' plot(rt_MH, inner_panel = show_ETSMH, terminal_panel = color_byNode(nodeID = 1, color = c("blue", "orange", "darkgreen")))
 #' }
 #'
 #' @export
 color_byNode <- function(nodeID, color = c("green", "orange", "red")) {
   return_colorFun <- function(object, ...){
-    psychotree::node_profileplot(object, col = create_colorList(object, nodeID = nodeID, cols = color, ...))
+    psychotree::node_profileplot(object, col = create_colorList(object, nodeID = nodeID, cols = color))
   }
   class(return_colorFun) <- "grapcon_generator"
   return(return_colorFun)
