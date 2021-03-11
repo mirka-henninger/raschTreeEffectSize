@@ -24,7 +24,7 @@ Helps to color item parameter in profileplots by inner nodes and ETS Mantel-Haen
 data("DIFSim", package = "psychotree")
 RT <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE)
 RT_MH <- add_mantelHaenszel(RT, purification = "iterative")
-plot(RT_MH, inner_panel = show_ETSMH, terminal_panel = color_byNode(nodeID = 1, color = c("blue", "orange", "darkgreen")))
+plot(RT_MH, terminal_panel = color_byNode(nodeID = 1, color = c("blue", "orange", "darkgreen")))
 }
 
 }
