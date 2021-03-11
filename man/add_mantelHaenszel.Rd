@@ -18,9 +18,10 @@ The Raschtree object with 'info' extended by a list named mantelHaenszel contain
 Function that saves Mantel-Haenszel effect size measures of a Raschtree into the Raschtree object
 }
 \examples{
+\dontrun{
 data("DIFSim", package = "psychotree")
 rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
 rt_MH <- add_mantelHaenszel(rt, purification = "iterative")
 rt_MH$info$mantelHaenszel
-
+}
 }

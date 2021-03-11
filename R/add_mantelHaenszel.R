@@ -6,11 +6,12 @@
 #' @return The Raschtree object with 'info' extended by a list named mantelHaenszel containing entries Mantel-Haenszel effect size, classification, purification type, and purificationCounter
 #'
 #' @examples
+#' \dontrun{
 #' data("DIFSim", package = "psychotree")
 #' rt <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
 #' rt_MH <- add_mantelHaenszel(rt, purification = "iterative")
 #' rt_MH$info$mantelHaenszel
-#'
+#' }
 #' @export
 add_mantelHaenszel <- function(object, purification){
   object$info$mantelHaenszel <- get_mantelHaenszel(rt, purification = purification, by = "type")
