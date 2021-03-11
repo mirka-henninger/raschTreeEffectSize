@@ -8,6 +8,7 @@ return_splitGroups <- function(node, datFitted){
   get_id <- function(x){
     ids <- x$id
     res <- paste("node", ids, sep = "")
+    return(res)
   }
 
   #' Get the split groups for a node in a tree object
