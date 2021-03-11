@@ -7,7 +7,6 @@
 #' @param ... Further arguments
 #'
 #' @return A list with the Mantel-Haenszel effect size measure in the Delta scale, the classification based on the ETS guidelines and information on purification and convergence of purification if iterative purification was done.
-#' @export
 calculate_mantelHaenszel <- function(dat, splitGroup, sums, purification, ...){
   if (! purification %in% c("none", "2step", "iterative")){
     print("Argument 'purification' is neither 'none', '2step', nor 'iterative'. No purification is done")
