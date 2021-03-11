@@ -14,6 +14,9 @@
 #' }
 #' @export
 add_mantelHaenszel <- function(object, purification){
+  # check whether object is of type Raschtree, modelparty, and party
+  if(!(all(class(object) %in% c("raschtree", "modelparty", "party"))))
+    stop("Object must be an Raschtree object (as returned from the raschtree function")
   object$info$mantelHaenszel <- get_mantelHaenszel(object, purification = purification, by = "type")
   return(object)
 }
