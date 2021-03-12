@@ -28,15 +28,16 @@ add_mantelHaenszel <- function(object, purification){
 #' option to color the items in terminal nodes by A/B/C DIF classification based on inner nodes,
 #' and option to turn on a background color so you can see which are the left and right terminal nodes for the inner nodes which items are colored
 #'
-#' @param object An object of type raschtreeMH with 'info' extended by a list named mantelHaenszel containing entries Mantel-Haenszel effect size, classification, purification type, and purificationCounter
+#' @param x An object of type raschtreeMH with 'info' extended by a list named mantelHaenszel containing entries Mantel-Haenszel effect size, classification, purification type, and purificationCounter
 #' @param showETSMH A logical with default is TRUE: Should the ETS-Mantel-Haenszel classification be shown in each inner node?
+#' @param colorbyNode An integer indicating the inner node after which the item paramter should be colored
 #' @param ABCcolors A character vector of length three indicating the colors in which items classified as A/B/C should be displayed
 #' @param nodeBackground A character vector of length two indicating the background colors of the panels for which the items have been compared
-#'
-#' @return
+#' @param ... arguments passed to the underlying functions, i.e., to mob_control for raschtree, and to the underlying predict and plot methods, respectively.
+#' @return An object of S3 class "raschtree" inheriting from class "modelparty".
 #'
 #' @export
-plot.raschtreeMH <- function(object,
+plot.raschtreeMH <- function(x,
                              showETSMH = TRUE,
                              colorbyNode = NULL,
                              ABCcolors = c("#00b6ba", "#ba6100", "#870300"),
@@ -52,7 +53,8 @@ plot.raschtreeMH <- function(object,
                                                            panelColor = nodeBackground)
 
   # plot raschtreeMH based on the original raschtree
-  psychotree::plot.raschtree(x,
-                             terminal_panel = terminal_panel,
-                             inner_panel = inner_panel, ...)
+  partykit::plot.modelparty(x,
+                            terminal_panel = terminal_panel,
+                            inner_panel = inner_panel, ...)
+  # NextMethod("plot.raschtree")
 }

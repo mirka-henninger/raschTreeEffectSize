@@ -5,7 +5,7 @@
 \title{Plots the Mantel-Haenszel Raschtree}
 \usage{
 \method{plot}{raschtreeMH}(
-  object,
+  x,
   showETSMH = TRUE,
   colorbyNode = NULL,
   ABCcolors = c("#00b6ba", "#ba6100", "#870300"),
@@ -14,16 +14,20 @@
 )
 }
 \arguments{
-\item{object}{An object of type raschtreeMH with 'info' extended by a list named mantelHaenszel containing entries Mantel-Haenszel effect size, classification, purification type, and purificationCounter}
+\item{x}{An object of type raschtreeMH with 'info' extended by a list named mantelHaenszel containing entries Mantel-Haenszel effect size, classification, purification type, and purificationCounter}
 
 \item{showETSMH}{A logical with default is TRUE: Should the ETS-Mantel-Haenszel classification be shown in each inner node?}
+
+\item{colorbyNode}{An integer indicating the inner node after which the item paramter should be colored}
 
 \item{ABCcolors}{A character vector of length three indicating the colors in which items classified as A/B/C should be displayed}
 
 \item{nodeBackground}{A character vector of length two indicating the background colors of the panels for which the items have been compared}
+
+\item{...}{arguments passed to the underlying functions, i.e., to mob_control for raschtree, and to the underlying predict and plot methods, respectively.}
 }
 \value{
-
+An object of S3 class "raschtree" inheriting from class "modelparty".
 }
 \description{
 Additional options to show the ETS-Mantel-Haenszel effect size classification in the inner nodes,
