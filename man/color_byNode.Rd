@@ -5,12 +5,14 @@
 \title{Helper function to to be used for the 'col' argument in the plot method for Raschtrees
 Helps to color item parameter in profileplots by inner nodes and ETS Mantel-Haenszel classification}
 \usage{
-color_byNode(nodeID, color = c("green", "orange", "red"))
+color_byNode(nodeID, difficultyColor, panelColor)
 }
 \arguments{
 \item{nodeID}{An integer indicating the inner node after which the item paramter should be colored}
 
-\item{color}{A character vector indicating the colors for items classified as A, B, or C}
+\item{difficultyColor}{A character vector indicating the colors for items classified as A, B, or C}
+
+\item{panelColor}{A character vector indicating the colors of the background panels for left and right terminal nodes of the inner node by which items are colored}
 }
 \value{
 A function that takes the argument 'purification'nodeID' and 'color' and can be used as a value for the argument 'terminal_panel' in plot.raschtree()
@@ -18,13 +20,4 @@ A function that takes the argument 'purification'nodeID' and 'color' and can be 
 \description{
 Helper function to to be used for the 'col' argument in the plot method for Raschtrees
 Helps to color item parameter in profileplots by inner nodes and ETS Mantel-Haenszel classification
-}
-\examples{
-\dontrun{
-data("DIFSim", package = "psychotree")
-RT <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE)
-RT_MH <- add_mantelHaenszel(RT, purification = "iterative")
-plot(RT_MH, terminal_panel = color_byNode(nodeID = 1, color = c("blue", "orange", "darkgreen")))
-}
-
 }

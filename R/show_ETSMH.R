@@ -9,16 +9,6 @@
 #' @param gp Argument copied from partykit:::node_inner
 #'
 #' @return A function that can be used as a value for the argument 'inner_panel' in plot.raschtree()
-#'
-#' @examples
-#' \dontrun{
-#' data("DIFSim", package = "psychotree")
-#' RT <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE)
-#' RT_MH <- add_mantelHaenszel(RT, purification = "iterative")
-#' plot(RT_MH, inner_panel = show_ETSMH)
-#' }
-#'
-#' @export
 show_ETSMH <- function(object, id = TRUE, pval = TRUE, abbreviate = FALSE, fill = "white", gp = gpar())
 {
   # check whether Delta-MH is saved in the Raschtree object

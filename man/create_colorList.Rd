@@ -11,7 +11,7 @@ create_colorList(object, nodeID, cols)
 
 \item{nodeID}{An integer indicating the inner node after which the item paramter should be colored}
 
-\item{cols}{A named character vector indicating the}
+\item{cols}{A character vector of length three indicating the colors in which items classified as A/B/C should be displayed}
 }
 \value{
 A list named after the terminal nodes containing the colors of the item parameter based on ETS Mantel-Haenszel classification

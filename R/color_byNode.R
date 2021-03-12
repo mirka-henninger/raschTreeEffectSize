@@ -2,24 +2,19 @@
 #' Helps to color item parameter in profileplots by inner nodes and ETS Mantel-Haenszel classification
 #'
 #' @param nodeID An integer indicating the inner node after which the item paramter should be colored
-#' @param color A character vector indicating the colors for items classified as A, B, or C
+#' @param difficultyColor A character vector indicating the colors for items classified as A, B, or C
+#' @param panelColor A character vector indicating the colors of the background panels for left and right terminal nodes of the inner node by which items are colored
 #'
 #' @return A function that takes the argument 'purification'nodeID' and 'color' and can be used as a value for the argument 'terminal_panel' in plot.raschtree()
-#'
-#' @examples
-#' \dontrun{
-#' data("DIFSim", package = "psychotree")
-#' RT <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE)
-#' RT_MH <- add_mantelHaenszel(RT, purification = "iterative")
-#' plot(RT_MH, terminal_panel = color_byNode(nodeID = 1, color = c("blue", "orange", "darkgreen")))
-#' }
-#'
-#' @export
-color_byNode <- function(nodeID, color = c("green", "orange", "red")) {
+color_byNode <- function(nodeID, difficultyColor, panelColor) {
   return_colorFun <- function(object, ...){
-    returnFun <- psychotree::node_profileplot(object, col = create_colorList(object, nodeID = nodeID, cols = color))
+    returnFun <-
+      psychotree::node_profileplot(object,
+                                   col = create_colorList(object, nodeID = nodeID, cols = difficultyColor),
+                                   bg = create_bgList(object, nodeID = nodeID, backgroundCols = panelColor))
     return(returnFun)
   }
+  print(paste("Colored by Node", nodeID))
   class(return_colorFun) <- "grapcon_generator"
   return(return_colorFun)
 }
@@ -27,7 +22,7 @@ color_byNode <- function(nodeID, color = c("green", "orange", "red")) {
 #'
 #' @param object An object of class raschtree that has the mantelHaenszel statistic added to it.
 #' @param nodeID An integer indicating the inner node after which the item paramter should be colored
-#' @param cols A named character vector indicating the
+    #' @param cols A character vector of length three indicating the colors in which items classified as A/B/C should be displayed
 #'
 #' @return A list named after the terminal nodes containing the colors of the item parameter based on ETS Mantel-Haenszel classification
 create_colorList <- function(object, nodeID, cols){
@@ -35,7 +30,7 @@ create_colorList <- function(object, nodeID, cols){
   if(is.null(object$info$mantelHaenszel))
     stop("No Mantel-Haenszel classification found. Please use the add_mantelHaenszel function to add Mantel-Haenszel effect size measures to the Raschtree object")
 
-  # get info on end nodes
+  # get IDs of inner nodes
   nodes <- partykit::node_party(object) # where the splits are
   innerNodes <- get_innerNodes(nodes)
   innerNodesIDs <- sapply(innerNodes, function(x) x$id)
@@ -56,14 +51,50 @@ create_colorList <- function(object, nodeID, cols){
   colorBy <- colFun(colorInfo)
 
   colorList <- rep(list(list()), length(allTerminalNodes))
-  colorList <- setNames(colorList, as.character(allTerminalNodes))
+  colorList <- stats::setNames(colorList, as.character(allTerminalNodes))
   for(entry in terminalNodes){
     colorList[[which(names(colorList) == entry)]] <- colorBy
   }
   for(entry in otherTerminalNodes){
     colorList[[which(names(colorList) == entry)]] <- "black"
   }
-  print(paste("Colored by Node", nodeID))
   return(colorList)
+}
+#' Helper function to create a list with colors for left and right child node of the node by which A/B/C coloring is performed
+#'
+#' @param object An object of class raschtree that has the mantelHaenszel statistic added to it.
+#' @param nodeID An integer indicating the inner node after which the item paramter should be colored
+#' @param backgroundCols A character vector indicating the colors of the background panels for left and right terminal nodes of the inner node by which items are colored
+#'
+#' @return A list named after the terminal nodes containing the colors of the item parameter based on ETS Mantel-Haenszel classification
+create_bgList <- function(object, nodeID, backgroundCols){
+  # check whether Delta-MH is saved in the Raschtree object
+  if(is.null(object$info$mantelHaenszel))
+    stop("No Mantel-Haenszel classification found. Please use the add_mantelHaenszel function to add Mantel-Haenszel effect size measures to the Raschtree object")
+
+  # get IDs of inner nodes
+  nodes <- partykit::node_party(object) # where the splits are
+  innerNodes <- get_innerNodes(nodes)
+  innerNodesIDs <- sapply(innerNodes, function(x) x$id)
+
+  # check whether nodeID describes an inner node
+  if(!(nodeID %in% innerNodesIDs)) stop(c("Coloring can only be executed based on ETS-MH of inner nodes (inner nodes: ", paste(as.character(innerNodesIDs), collapse = ", "), ")"))
+
+  # get terminal nodes of nodeID and the remaining node IDs
+  whichID <- which(innerNodesIDs == nodeID)
+  childrenLeft <- kids_node(innerNodes[[whichID]])[[1]]
+  childrenRight <- kids_node(innerNodes[[whichID]])[[2]]
+  terminalLeft <- get_terminalNodes(childrenLeft)
+  terminalRight <- get_terminalNodes(childrenRight)
+
+  bgList <- rep(list(list()), length(c(terminalLeft, terminalRight)))
+  bgList <- stats::setNames(bgList, as.character(c(terminalLeft, terminalRight)))
+  for(entry in terminalLeft){
+    bgList[[which(names(bgList) == entry)]] <- backgroundCols[1]
+  }
+  for(entry in terminalRight){
+    bgList[[which(names(bgList) == entry)]] <- backgroundCols[2]
+  }
+  return(bgList)
 }
 

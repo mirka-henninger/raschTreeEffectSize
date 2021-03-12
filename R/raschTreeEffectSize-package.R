@@ -11,6 +11,6 @@
 #' @import partykit
 #' @import difR
 #' @import grid
-#' @importFrom stats pchisq rt setNames
+#' @importFrom stats pchisq
 #'
 NULL

@@ -2,7 +2,7 @@
 % Please edit documentation in R/add_mantelHaenszel.R
 \name{add_mantelHaenszel}
 \alias{add_mantelHaenszel}
-\title{Function that saves Mantel-Haenszel effect size measures of a Raschtree into the Raschtree object}
+\title{Creates a raschtreeMH object based on the original Raschtree with additional Mantel-Haenszel effect size information}
 \usage{
 add_mantelHaenszel(object, purification)
 }
@@ -12,10 +12,10 @@ add_mantelHaenszel(object, purification)
 \item{purification}{A character indicating the type of purification ("none", "2step", "iterative")}
 }
 \value{
-The Raschtree object with 'info' extended by a list named mantelHaenszel containing entries Mantel-Haenszel effect size, classification, purification type, and purificationCounter
+An object of type raschtreeMH with 'info' extended by a list named mantelHaenszel containing entries Mantel-Haenszel effect size, classification, purification type, and purificationCounter
 }
 \description{
-Function that saves Mantel-Haenszel effect size measures of a Raschtree into the Raschtree object
+Creates a raschtreeMH object based on the original Raschtree with additional Mantel-Haenszel effect size information
 }
 \examples{
 \dontrun{
@@ -23,5 +23,6 @@ data("DIFSim", package = "psychotree")
 RT <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
 RT_MH <- add_mantelHaenszel(RT, purification = "iterative")
 RT_MH$info$mantelHaenszel
+plot(RT_MH, colorbyNode = 1)
 }
 }

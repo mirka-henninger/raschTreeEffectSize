@@ -32,12 +32,3 @@ A function that can be used as a value for the argument 'inner_panel' in plot.ra
 \description{
 This function is largely copied from partykit:::node_inner and adapted to display larger inner nodes with corresponding Mantel-Haenszel classification summaries
 }
-\examples{
-\dontrun{
-data("DIFSim", package = "psychotree")
-RT <- raschtree(resp ~ age + gender + motivation, data = DIFSim, verbose = TRUE)
-RT_MH <- add_mantelHaenszel(RT, purification = "iterative")
-plot(RT_MH, inner_panel = show_ETSMH)
-}
-
-}
