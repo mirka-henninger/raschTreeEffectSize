@@ -41,7 +41,7 @@ plot.raschtreeMH <- function(x,
                              showETSMH = TRUE,
                              colorbyNode = NULL,
                              ABCcolors = c("#00b6ba", "#ba6100", "#870300"),
-                             nodeBackground = c("#eabb62", "#6291ea"), ...){
+                             nodeBackground = c("#a6a6a6", "#ffd60a"), ...){
 
   # define inner and terminal panels
   inner_panel <- partykit::node_inner
