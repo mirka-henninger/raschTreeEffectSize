@@ -1,4 +1,4 @@
-# raschTreeEffectSize
+# raschtreeMH
 
 This compendium contains helper functions to use the Mantel-Haenszel odds ratio effect size measure in Raschtrees to evaluate the magnitude of DIF
 
@@ -7,8 +7,8 @@ It can be installed like an R package using the devtools-package:
 
 ``` r
 install.packages("devtools")
-devtools::install_github("mirka-henninger/raschTreeEffectSize")
-library(raschTreeEffectSize)
+devtools::install_github("mirka-henninger/raschtreeMH")
+library(raschtreeMH)
 ```
 
 ## References
