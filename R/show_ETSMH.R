@@ -15,11 +15,12 @@ show_ETSMH <- function(object, id = TRUE, pval = TRUE, abbreviate = FALSE, fill 
   if(is.null(object$info$mantelHaenszel))
     warning("No Mantel-Haenszel classification found. Please use the add_mantelHaenszel function to add Mantel-Haenszel effect size measures to the Raschtree object")
   # extract ETS-MH
-  MH <- object$info$mantelHaenszel
-  tabMH <- data.frame(apply(MH$classification, 2, table))
-  tabMH <- apply(tabMH, 2, function(x) paste(rownames(tabMH), ":", x, "; ", sep = ""))
+  MH <- data.frame(object$info$mantelHaenszel$classification)
+  MH <- lapply(MH, function(x) factor(x, levels = c("A", "B", "C")))
+  tableMH <- sapply(MH, table)
+  tabMH <- apply(tableMH, 2, function(x) paste(rownames(tableMH), ":", x, "; ", sep = ""))
   tabMH <- apply(tabMH, 2, function(x) paste(c(rep("_", 14), "\nETS-MH: ", x), collapse = ""))
-  print(paste("Purification of ETS-MH:", MH$purification[1], sep = " "))
+  print(paste("Purification of ETS-MH:", object$info$mantelHaenszel$purification[1], sep = " "))
 
   # original node_inner function
   meta <- object$data
