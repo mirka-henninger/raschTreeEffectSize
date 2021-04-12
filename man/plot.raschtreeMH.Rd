@@ -9,7 +9,7 @@
   showETSMH = TRUE,
   colorbyNode = NULL,
   ABCcolors = c("#00b6ba", "#ba6100", "#870300"),
-  nodeBackground = c("#d6e0f0", "#f0e6d6"),
+  nodeBackground = c("#a6a6a6", "#ffd60a"),
   ...
 )
 }
