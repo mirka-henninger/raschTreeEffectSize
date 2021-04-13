@@ -1,14 +1,24 @@
 # raschtreeMH
 
-This compendium contains helper functions to use the Mantel-Haenszel odds ratio effect size measure in Raschtrees to evaluate the magnitude of DIF
+This compendium contains helper functions to use the Mantel-Haenszel odds ratio effect size measure in Rasch trees to evaluate the magnitude of DIF
 
 It can be installed like an R package using the devtools-package:
 ----------------------------------------------------------
 
 ``` r
-install.packages("devtools")
 devtools::install_github("mirka-henninger/raschtreeMH")
 library(raschtreeMH)
+```
+
+
+It can be used in combination with the psychotree package to add the Mantel-Haenszel effect size measure into a Rasch tree object:
+----------------------------------------------------------
+``` r
+data("DIFSim", package = "psychotree")
+RT <- psychotree::raschtree(resp ~ age + gender + motivation, data = DIFSim)
+RT_MH <- add_mantelHaenszel(RT, purification = "iterative")
+RT_MH$info$mantelHaenszel
+plot(RT_MH, colorbyNode = 1)
 ```
 
 ## References
