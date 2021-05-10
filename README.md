@@ -14,7 +14,6 @@ data("DIFSim", package = "psychotree")
 RT <- psychotree::raschtree(resp ~ age + gender + motivation, data = DIFSim)
 RT_MH <- add_mantelHaenszel(RT, purification = "iterative")
 RT_MH$info$mantelHaenszel
-plot(RT_MH, colorbyNode = 1)
 ```
 
 ## References
