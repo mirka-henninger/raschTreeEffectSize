@@ -11,6 +11,7 @@ color_byNode <- function(nodeID, difficultyColor, panelColor) {
     returnFun <-
       psychotree::node_profileplot(object,
                                    col = create_colorList(object, nodeID = nodeID, cols = difficultyColor),
+                                   border = "black",
                                    bg = create_bgList(object, nodeID = nodeID, backgroundCols = panelColor))
     return(returnFun)
   }
