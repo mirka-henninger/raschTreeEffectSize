@@ -8,7 +8,8 @@
 #' @examples
 #' \dontrun{
 #' data("DIFSim", package = "psychotree")
-#' RT <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
+#' RT <- raschtree(resp ~ age + gender + motivation, data = DIFSim,
+#'                 stopfun = stopFun_mantelHaenszel(purification = "iterative"))
 #' RT_MH <- add_mantelHaenszel(RT, purification = "iterative")
 #' RT_MH$info$mantelHaenszel
 #' plot(RT_MH, colorbyNode = 1)

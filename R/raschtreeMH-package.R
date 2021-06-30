@@ -13,9 +13,8 @@
 #' @import difR
 #' @import grid
 #' @import psychotools
-#' @importFrom stats pchisq
-#' @importFrom stats coef
-#' @importFrom stats model.frame
-#' @importFrom stats predict
+#' @import stats
+#' @importFrom utils capture.output
+#' @importFrom utils head
 #'
 NULL

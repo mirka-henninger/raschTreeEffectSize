@@ -24,4 +24,5 @@ Imports:
     mvtnorm, 
     sandwich, 
     strucchange,
-    Formula
+    Formula,
+    utils
