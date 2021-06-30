@@ -3,6 +3,7 @@
 S3method(plot,raschtreeMH)
 export(add_mantelHaenszel)
 export(get_mantelHaenszel)
+export(mob)
 export(mob_control)
 export(stopFun_mantelHaenszel)
 import(difR)
