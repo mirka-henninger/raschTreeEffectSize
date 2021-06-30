@@ -12,7 +12,6 @@
 #' @import partykit
 #' @import difR
 #' @import grid
-#' @import psychotools
 #' @import stats
 #' @importFrom utils capture.output
 #' @importFrom utils head
