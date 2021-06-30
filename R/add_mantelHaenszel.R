@@ -47,7 +47,7 @@ plot.raschtreeMH <- function(x,
   inner_panel <- partykit::node_inner
   if(showETSMH == TRUE) inner_panel <- show_ETSMH
 
-  terminal_panel <- psychotree::node_profileplot
+  terminal_panel <- node_profileplot
   if(!is.null(colorbyNode)) terminal_panel <- color_byNode(nodeID = colorbyNode,
                                                            difficultyColor = ABCcolors,
                                                            panelColor = nodeBackground)

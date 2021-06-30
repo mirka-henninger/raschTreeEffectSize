@@ -8,9 +8,14 @@
 #' @description Helper functions to use the Mantel-Haenszel effect size measure as a stopping criterion in Rasch trees
 #'
 #' @import psychotree
+#' @import psychotools
 #' @import partykit
 #' @import difR
 #' @import grid
+#' @import psychotools
 #' @importFrom stats pchisq
+#' @importFrom stats coef
+#' @importFrom stats model.frame
+#' @importFrom stats predict
 #'
 NULL

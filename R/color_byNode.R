@@ -9,10 +9,10 @@
 color_byNode <- function(nodeID, difficultyColor, panelColor) {
   return_colorFun <- function(object, ...){
     returnFun <-
-      psychotree::node_profileplot(object,
-                                   col = create_colorList(object, nodeID = nodeID, cols = difficultyColor),
-                                   border = "black",
-                                   bg = create_bgList(object, nodeID = nodeID, backgroundCols = panelColor))
+      node_profileplot(object,
+                       col = create_colorList(object, nodeID = nodeID, cols = difficultyColor),
+                       border = "black",
+                       bg = create_bgList(object, nodeID = nodeID, backgroundCols = panelColor))
     return(returnFun)
   }
   print(paste("Colored by Node", nodeID))
@@ -23,7 +23,7 @@ color_byNode <- function(nodeID, difficultyColor, panelColor) {
 #'
 #' @param object An object of class raschtree that has the mantelHaenszel statistic added to it.
 #' @param nodeID An integer indicating the inner node after which the item paramter should be colored
-    #' @param cols A character vector of length three indicating the colors in which items classified as A/B/C should be displayed
+#' @param cols A character vector of length three indicating the colors in which items classified as A/B/C should be displayed
 #'
 #' @return A list named after the terminal nodes containing the colors of the item parameter based on ETS Mantel-Haenszel classification
 create_colorList <- function(object, nodeID, cols){
