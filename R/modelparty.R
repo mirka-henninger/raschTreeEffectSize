@@ -1,5 +1,5 @@
 ## set up partynode object
-#' @export
+
 mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL,
   fit, control = mob_control(), varindex = 1L:NCOL(Z), ...)
 {
@@ -549,7 +549,7 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
 }
 
 ## control splitting parameters
-#' @export
+
 mob_control <- function(alpha = 0.05, bonferroni = TRUE, minsize = NULL, maxdepth = Inf,
   mtry = Inf, trim = 0.1, breakties = FALSE, parm = NULL, dfsplit = TRUE, prune = NULL, restart = TRUE,
   verbose = FALSE, caseweights = TRUE, ytype = "vector", xtype = "matrix",

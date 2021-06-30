@@ -16,7 +16,5 @@
 #' @import stats
 #' @importFrom utils capture.output
 #' @importFrom utils head
-#' @export mob_partynode
-#' @export mob_control
 #'
 NULL
