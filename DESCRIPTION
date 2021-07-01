@@ -13,9 +13,7 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Depends: 
-    psychotree,
     psychotools (>= 0.4-0),
-    partykit (>= 0.8-4),
     difR,
     R (>= 2.15)
 Imports:

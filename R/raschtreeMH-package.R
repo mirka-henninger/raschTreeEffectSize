@@ -7,13 +7,17 @@
 #'
 #' @description Helper functions to use the Mantel-Haenszel effect size measure as a stopping criterion in Rasch trees
 #'
-#' @import psychotree
 #' @import psychotools
-#' @import partykit
 #' @import difR
 #' @import grid
 #' @import stats
 #' @importFrom utils capture.output
 #' @importFrom utils head
+#' @importFrom utils tail
+#' @importFrom grDevices gray.colors
+#' @importFrom graphics boxplot
+#' @importFrom graphics hist
+#' @export raschtree
+#' @export mob
 #'
 NULL
