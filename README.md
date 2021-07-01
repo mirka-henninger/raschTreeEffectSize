@@ -8,12 +8,14 @@ devtools::install_github("mirka-henninger/raschtreeMH")
 library(raschtreeMH)
 ```
 
-It uses functions from the [psychotree](https://github.com/cran/psychotree/) and [partykit](https://github.com/cran/partykit) packages to fit the raschtree in the recursive partioning environment. Add-on helper functions can be used to add the Mantel-Haenszel effect size measure into a Rasch tree object:
+It uses functions from the [psychotree](https://github.com/cran/psychotree/) and [partykit](https://github.com/cran/partykit) packages to fit the raschtree in the recursive partioning environment. The functions from the packages (in particular mob, mob_control, and graphics functions) are modified, to include the new stopping rule and to be able to color items in each end ndoe by the Mantel-Haenszel odds ratio effect size measure of inner nodes. Additional helper functions are provided to compute the Mantel-Haenszel odds ratio from the raschtree object. 
+
 ``` r
 data("DIFSim", package = "psychotree")
-RT <- psychotree::raschtree(resp ~ age + gender + motivation, data = DIFSim)
+RT <- psychotree::raschtree(resp ~ age + gender + motivation, data = DIFSim, stopfun = stopFun_mantelHaenszel(purification = "iterative"))
 RT_MH <- add_mantelHaenszel(RT, purification = "iterative")
 RT_MH$info$mantelHaenszel
+plot(RT_MH, colorbyNode = 1)
 ```
 
 ## References
