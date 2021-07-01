@@ -8,7 +8,7 @@ devtools::install_github("mirka-henninger/raschtreeMH")
 library(raschtreeMH)
 ```
 
-It uses functions from the psychotree and partykit packages to fit the raschtree in the recursive partioning environment. Add-on helper functions can be used to add the Mantel-Haenszel effect size measure into a Rasch tree object:
+It uses functions from the [psychotree](https://github.com/cran/psychotree/) and [partykit](https://github.com/cran/partykit) packages to fit the raschtree in the recursive partioning environment. Add-on helper functions can be used to add the Mantel-Haenszel effect size measure into a Rasch tree object:
 ``` r
 data("DIFSim", package = "psychotree")
 RT <- psychotree::raschtree(resp ~ age + gender + motivation, data = DIFSim)
