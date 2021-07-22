@@ -12,7 +12,7 @@ It uses functions from the [psychotree](https://github.com/cran/psychotree/) and
 
 ``` r
 data("DIFSim", package = "psychotree")
-RT <- raschtree(resp ~ age + gender + motivation, data = DIFSim, stopfun = stopFun_mantelHaenszel(purification = "iterative"))
+RT <- raschtree(resp ~ age + motivation, data = DIFSim, stopfun = stopFun_mantelHaenszel(purification = "iterative"))
 RT_MH <- add_mantelHaenszel(RT, purification = "iterative")
 RT_MH$info$mantelHaenszel
 plot(RT_MH, colorbyNode = 1)
