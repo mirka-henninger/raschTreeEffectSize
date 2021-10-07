@@ -11,8 +11,8 @@ color_byNode <- function(nodeID, classColor, classSize, classShape, panelColor) 
   return_colorFun <- function(object, ...){
     returnFun <-
       node_profileplot(object,
-                       col = create_colorList(object, nodeID = nodeID, pars = classColor),
-                       cex = create_colorList(object, nodeID = nodeID, pars = classSize),
+                       col = create_colorList(object, nodeID = nodeID, pars = classColor, default = "black"),
+                       cex = create_colorList(object, nodeID = nodeID, pars = classSize, default = .4),
                        border = "black",
                        bg = create_bgList(object, nodeID = nodeID, backgroundCols = panelColor))
     return(returnFun)
@@ -28,7 +28,7 @@ color_byNode <- function(nodeID, classColor, classSize, classShape, panelColor) 
 #' @param cols A character vector of length three indicating the colors in which items classified as A/B/C should be displayed
 #'
 #' @return A list named after the terminal nodes containing the colors of the item parameter based on ETS Mantel-Haenszel classification
-create_colorList <- function(object, nodeID, pars){
+create_colorList <- function(object, nodeID, pars, default){
   # check whether Delta-MH is saved in the Raschtree object
   if(is.null(object$info$mantelHaenszel))
     stop("No Mantel-Haenszel classification found. Please use the add_mantelHaenszel function to add Mantel-Haenszel effect size measures to the Raschtree object")
@@ -59,7 +59,7 @@ create_colorList <- function(object, nodeID, pars){
     colorList[[which(names(colorList) == entry)]] <- colorBy
   }
   for(entry in otherTerminalNodes){
-    colorList[[which(names(colorList) == entry)]] <- "black"
+    colorList[[which(names(colorList) == entry)]] <- default
   }
   return(colorList)
 }
