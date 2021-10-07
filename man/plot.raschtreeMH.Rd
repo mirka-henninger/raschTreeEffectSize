@@ -9,6 +9,7 @@
   showETSMH = TRUE,
   colorbyNode = NULL,
   ABCcolors = c("#99e1e3", "#ba6100", "#6c0200"),
+  ABCsize = c(0.35, 0.7, 1),
   nodeBackground = c("#eee3af", "#aeaeae"),
   ...
 )

@@ -42,6 +42,7 @@ plot.raschtreeMH <- function(x,
                              showETSMH = TRUE,
                              colorbyNode = NULL,
                              ABCcolors = c("#99e1e3", "#ba6100", "#6c0200"),
+                             ABCsize = c(.35,.7,1),
                              nodeBackground = c("#eee3af", "#aeaeae"), ...){
 
   # define inner and terminal panels
@@ -50,7 +51,8 @@ plot.raschtreeMH <- function(x,
 
   terminal_panel <- node_profileplot
   if(!is.null(colorbyNode)) terminal_panel <- color_byNode(nodeID = colorbyNode,
-                                                           difficultyColor = ABCcolors,
+                                                           classColor = ABCcolors,
+                                                           classSize = ABCsize,
                                                            panelColor = nodeBackground)
 
   # plot raschtreeMH based on the original raschtree

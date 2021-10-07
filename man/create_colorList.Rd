@@ -2,9 +2,9 @@
 % Please edit documentation in R/color_byNode.R
 \name{create_colorList}
 \alias{create_colorList}
-\title{Helper function to create a list with colors for each terminal node}
+\title{Helper function to create a list with colors and point sizes for each terminal node}
 \usage{
-create_colorList(object, nodeID, cols)
+create_colorList(object, nodeID, pars)
 }
 \arguments{
 \item{object}{An object of class raschtree that has the mantelHaenszel statistic added to it.}
@@ -17,5 +17,5 @@ create_colorList(object, nodeID, cols)
 A list named after the terminal nodes containing the colors of the item parameter based on ETS Mantel-Haenszel classification
 }
 \description{
-Helper function to create a list with colors for each terminal node
+Helper function to create a list with colors and point sizes for each terminal node
 }

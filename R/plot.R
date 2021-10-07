@@ -45,12 +45,12 @@ node_inner <- function(obj, id = TRUE, pval = TRUE, abbreviate = FALSE, fill = "
   if(nchar(nstr) < 6) nstr <- "aAAAAa"
 
   ### panel function for the inner nodes
-  rval <- function(node) {  
+  rval <- function(node) {
     pushViewport(viewport(gp = gp, name = paste("node_inner", id_node(node), "_gpar", sep = "")))
     node_vp <- viewport(
       x = unit(0.5, "npc"),
       y = unit(0.5, "npc"),
-      width = unit(1, "strwidth", nstr) * 1.3, 
+      width = unit(1, "strwidth", nstr) * 1.3,
       height = unit(3, "lines"),
       name = paste("node_inner", id_node(node), sep = ""),
       gp = gp
@@ -84,7 +84,7 @@ node_inner <- function(obj, id = TRUE, pval = TRUE, abbreviate = FALSE, fill = "
     }
     upViewport(2)
   }
-  
+
   return(rval)
 }
 class(node_inner) <- "grapcon_generator"
@@ -127,7 +127,7 @@ node_terminal <- function(obj,
 
   ### panel function for simple n, Y terminal node labeling
   rval <- function(node) {
-    fill <- rep(fill, length.out = 2)	    
+    fill <- rep(fill, length.out = 2)
 
     lab <- extract_label(node)
 
@@ -137,9 +137,9 @@ node_terminal <- function(obj,
       outer_vp <- viewport(gp = gp)
       pushViewport(outer_vp)
     }
-    
+
     if(is.null(height)) height <- length(lab) + 1L
-    
+
     node_vp <- viewport(x = unit(0.5, "npc"),
       y = unit(if(just == "top") top else 0.5, "npc"),
       just = c("center", just),
@@ -151,7 +151,7 @@ node_terminal <- function(obj,
     pushViewport(node_vp)
 
     grid.rect(gp = gpar(fill = fill[1]))
-      
+
     for(i in seq_along(lab)) grid.text(
       x = switch(align,
         "center" = unit(0.5, "npc"),
@@ -168,7 +168,7 @@ node_terminal <- function(obj,
       grid.text(nam[id_node(node)])
       popViewport()
     }
-    
+
     if(is.null(gp)) upViewport() else upViewport(2)
   }
   return(rval)
@@ -213,30 +213,30 @@ edge_simple <- function(obj, digits = 3, abbreviate = FALSE,
 }
 class(edge_simple) <- "grapcon_generator"
 
-.plot_node <- function(node, xlim, ylim, nx, ny, 
+.plot_node <- function(node, xlim, ylim, nx, ny,
                terminal_panel, inner_panel, edge_panel,
 	       tnex = 2, drop_terminal = TRUE, debug = FALSE) {
 
     ### the workhorse for plotting trees
- 
+
     ### set up viewport for terminal node
     if (is.terminal(node)) {
         x <- xlim[1] + diff(xlim)/2
         y <- ylim[1] + 0.5
-       
+
         tn_vp <- viewport(x = unit(x, "native"),
                           y = unit(y, "native") - unit(0.5, "lines"),
-                          width = unit(1, "native"), 
+                          width = unit(1, "native"),
                           height = unit(tnex, "native") - unit(1, "lines"),
 			  just = c("center", "top"),
                           name = paste("Node", id_node(node), sep = ""))
         pushViewport(tn_vp)
         if (debug)
             grid.rect(gp = gpar(lty = "dotted", col = 4))
-        terminal_panel(node) 
+        terminal_panel(node)
         upViewport()
         return(NULL)
-    }    
+    }
 
     ## convenience function for computing relative position of splitting node
     pos_frac <- function(node) {
@@ -276,7 +276,7 @@ class(edge_simple) <- "grapcon_generator"
     in_vp <- viewport(x = unit(x0, "native"),
                       y = unit(y0, "native"),
                       width = unit(1, "native"),
-                      height = unit(1, "native") - unit(1, "lines"), 
+                      height = unit(1, "native") - unit(1, "lines"),
                       name = paste("Node", id_node(node), sep = ""))
     pushViewport(in_vp)
     if(debug) grid.rect(gp = gpar(lty = "dotted"))
@@ -293,7 +293,7 @@ class(edge_simple) <- "grapcon_generator"
       sp_vp <- viewport(x = unit(xpos[i], "native"),
                         y = unit(ypos, "native"),
                         width = unit(diff(x1lim)[i], "native"),
-                        height = unit(1, "lines"), 
+                        height = unit(1, "lines"),
                         name =  paste("edge", id_node(node), "-", i, sep = ""))
       pushViewport(sp_vp)
       if(debug) grid.rect(gp = gpar(lty = "dotted", col = 2))
@@ -303,7 +303,7 @@ class(edge_simple) <- "grapcon_generator"
 
     ## call workhorse for kids
     for(i in 1:nk) .plot_node(kids[[i]],
-      c(x1lim[i], x1lim[i+1]), c(y1[i], 1), nx, ny, 
+      c(x1lim[i], x1lim[i+1]), c(y1[i], 1), nx, ny,
       terminal_panel, inner_panel, edge_panel,
       tnex = tnex, drop_terminal = drop_terminal, debug = debug)
 }
@@ -313,7 +313,7 @@ plot.party <- function(x, main = NULL,
                        terminal_panel = node_terminal, tp_args = list(),
 		       inner_panel = node_inner, ip_args = list(),
                        edge_panel = edge_simple, ep_args = list(),
-		       drop_terminal = FALSE, tnex = 1, 
+		       drop_terminal = FALSE, tnex = 1,
 		       newpage = TRUE, pop = TRUE, gp = gpar(),
 		       margins = NULL, ...)
 {
@@ -334,18 +334,18 @@ plot.party <- function(x, main = NULL,
     } else {
       rep_len(margins, 4L)
     }
-    root_vp <- viewport(layout = grid.layout(3, 3, 
-    			heights = unit(c(margins[3L], 1, margins[1L]), 
+    root_vp <- viewport(layout = grid.layout(3, 3,
+    			heights = unit(c(margins[3L], 1, margins[1L]),
                                       c("lines", "null", "lines")),
-    			widths = unit(c(margins[2L], 1, margins[4L]), 
-                                     c("lines", "null", "lines"))), 
+    			widths = unit(c(margins[2L], 1, margins[4L]),
+                                     c("lines", "null", "lines"))),
     			name = "root",
-			gp = gp)       
+			gp = gp)
     pushViewport(root_vp)
-  
+
     ## viewport for main title (if any)
     if (!is.null(main)) {
-        main_vp <- viewport(layout.pos.col = 2, layout.pos.row = 1, 
+        main_vp <- viewport(layout.pos.col = 2, layout.pos.row = 1,
                             name = "main")
         pushViewport(main_vp)
         grid.text(y = unit(1, "lines"), main, just = "center")
@@ -353,8 +353,8 @@ plot.party <- function(x, main = NULL,
     }
 
     ## setup viewport for tree
-    tree_vp <- viewport(layout.pos.col = 2, layout.pos.row = 2, 
-    			xscale = c(0, nx), yscale = c(0, ny + (tnex - 1)), 
+    tree_vp <- viewport(layout.pos.col = 2, layout.pos.row = 2,
+    			xscale = c(0, nx), yscale = c(0, ny + (tnex - 1)),
                         name = "tree")
     pushViewport(tree_vp)
 
@@ -375,7 +375,7 @@ plot.party <- function(x, main = NULL,
       ## call the workhorse
       .plot_node(node,
         xlim = c(0, nx), ylim = c(0, ny - 0.5 + (tnex - 1)),
-        nx = nx, ny = ny, 
+        nx = nx, ny = ny,
         terminal_panel = terminal_panel,
         inner_panel = inner_panel,
         edge_panel = edge_panel,
@@ -391,14 +391,14 @@ plot.constparty <- function(x, main = NULL,
                         terminal_panel = NULL, tp_args = list(),
 	 	        inner_panel = node_inner, ip_args = list(),
                         edge_panel = edge_simple, ep_args = list(),
-		        type = c("extended", "simple"), drop_terminal = NULL, tnex = NULL, 
+		        type = c("extended", "simple"), drop_terminal = NULL, tnex = NULL,
 		        newpage = TRUE, pop = TRUE, gp = gpar(), ...)
 {
     ### compute default settings
     type <- match.arg(type)
     if (type == "simple") {
 	x <- as.simpleparty(x)
-        if (is.null(terminal_panel)) 
+        if (is.null(terminal_panel))
             terminal_panel <- node_terminal
         if (is.null(tnex)) tnex <- 1
         if (is.null(drop_terminal)) drop_terminal <- FALSE
@@ -413,7 +413,7 @@ plot.constparty <- function(x, main = NULL,
         if (is.null(terminal_panel)) {
 	    cl <- class(x$fitted[["(response)"]])
 	    if("factor" %in% cl) {
-	        terminal_panel <- node_barplot 
+	        terminal_panel <- node_barplot
 	    } else if("Surv" %in% cl) {
 	        terminal_panel <- node_surv
             } else if ("data.frame" %in% cl) {
@@ -451,11 +451,11 @@ node_barplot <- function(obj,
                          mainlab = NULL,
 			 text = c("none", "horizontal", "vertical"),
 			 gp = gpar())
-{   
+{
     ## extract response
     y <- obj$fitted[["(response)"]]
     stopifnot(is.factor(y) || isTRUE(all.equal(round(y), y)) || is.data.frame(y))
-    
+
     ## FIXME: This could be avoided by
     ##   predict_party(obj, nodeids(obj, terminal = TRUE), type = "prob")
     ## but only for terminal nodes                  ^^^^
@@ -479,7 +479,7 @@ node_barplot <- function(obj,
     probs <- do.call("rbind", nodeapply(obj, nodeids(obj), probs_and_n, by_node = FALSE))
     nobs <- probs[, "nobs"]
     probs <- probs[, -ncol(probs), drop = FALSE]
-    
+
     if(is.factor(y)) {
         ylevels <- levels(y)
 	if(is.null(beside)) beside <- if(length(ylevels) < 3L) FALSE else TRUE
@@ -503,10 +503,10 @@ node_barplot <- function(obj,
 
     ### panel function for barplots in nodes
     rval <- function(node) {
-    
+
         ## id
 	nid <- id_node(node)
-    
+
         ## parameter setup
         pred <- probs[nid,]
 	if(reverse) {
@@ -516,7 +516,7 @@ node_barplot <- function(obj,
         np <- length(pred)
 	nc <- if(beside) np else 1
 
-	fill <- rep(fill, length.out = np)	
+	fill <- rep(fill, length.out = np)
         widths <- rep(widths, length.out = nc)
 	col <- rep(col, length.out = nc)
 	ylines <- rep(ylines, length.out = 2)
@@ -528,7 +528,7 @@ node_barplot <- function(obj,
         top_vp <- viewport(layout = grid.layout(nrow = 2, ncol = 3,
                            widths = unit(c(ylines[1], 1, ylines[2]), c("lines", "null", "lines")),
                            heights = unit(c(1, 1), c("lines", "null"))),
-                           width = unit(1, "npc"), 
+                           width = unit(1, "npc"),
                            height = unit(1, "npc") - unit(2, "lines"),
 			   name = paste0("node_barplot", nid),
 			   gp = gp)
@@ -539,7 +539,7 @@ node_barplot <- function(obj,
         ## main title
         top <- viewport(layout.pos.col=2, layout.pos.row=1)
         pushViewport(top)
-        if (is.null(mainlab)) {	
+        if (is.null(mainlab)) {
 	  mainlab <- if(id) {
 	    function(id, nobs) sprintf("Node %s (n = %s)", id, nobs)
   	  } else {
@@ -551,25 +551,25 @@ node_barplot <- function(obj,
 	}
         grid.text(mainlab)
         popViewport()
-	
+
         plot <- viewport(layout.pos.col=2, layout.pos.row=2,
                          xscale=xscale, yscale=yscale,
 			 name = paste0("node_barplot", node$nodeID, "plot"),
 			 clip = FALSE)
 
         pushViewport(plot)
-	
+
 	if(beside) {
   	  xcenter <- cumsum(widths+gap) - widths/2
           if(length(xcenter) > 1) grid.xaxis(at = xcenter, label = FALSE)
-	  grid.text(ylevels, x = xcenter, y = unit(-1, "lines"), 
+	  grid.text(ylevels, x = xcenter, y = unit(-1, "lines"),
                     just = just, rot = rot,
 	            default.units = "native", check.overlap = TRUE)
           grid.yaxis()
           grid.rect(gp = gpar(fill = "transparent"))
 	  grid.clip()
 	  for (i in 1:np) {
-            grid.rect(x = xcenter[i], y = 0, height = pred[i], 
+            grid.rect(x = xcenter[i], y = 0, height = pred[i],
                       width = widths[i],
 	              just = c("center", "bottom"), default.units = "native",
 	              gp = gpar(col = col[i], fill = fill[i]))
@@ -597,12 +597,12 @@ node_barplot <- function(obj,
                       just = "center", rot = 90,
 	              default.units = "native", check.overlap = TRUE)
 	  }
-          grid.yaxis(main = FALSE)	
+          grid.yaxis(main = FALSE)
 
           grid.clip()
           grid.rect(gp = gpar(fill = "transparent"))
 	  for (i in 1:np) {
-            grid.rect(x = xscale[2]/2, y = ycenter[i], height = min(pred[i], ymax - ycenter[i]), 
+            grid.rect(x = xscale[2]/2, y = ycenter[i], height = min(pred[i], ymax - ycenter[i]),
                       width = widths[1],
 	              just = c("center", "bottom"), default.units = "native",
 	              gp = gpar(col = col[i], fill = fill[i]))
@@ -610,10 +610,10 @@ node_barplot <- function(obj,
 	}
 	grid.rect(gp = gpar(fill = "transparent"))
 
-	
+
         upViewport(2)
     }
-    
+
     return(rval)
 }
 class(node_barplot) <- "grapcon_generator"
@@ -627,15 +627,15 @@ node_boxplot <- function(obj,
 		         ylines = 3,
 			 cex = 0.5,
 		         id = TRUE,
-                         mainlab = NULL, 
+                         mainlab = NULL,
 			 gp = gpar())
 {
     y <- obj$fitted[["(response)"]]
     stopifnot(is.numeric(y))
 
-    if (is.null(yscale)) 
+    if (is.null(yscale))
         yscale <- range(y) + c(-0.1, 0.1) * diff(range(y))
-         
+
     ### panel function for boxplots in nodes
     rval <- function(node) {
 
@@ -645,15 +645,15 @@ node_boxplot <- function(obj,
 	yn <- dat[["(response)"]]
 	wn <- dat[["(weights)"]]
 	if(is.null(wn)) wn <- rep(1, length(yn))
-    
+
         ## parameter setup
 	x <- boxplot(rep.int(yn, wn), plot = FALSE)
 
         top_vp <- viewport(layout = grid.layout(nrow = 2, ncol = 3,
-                           widths = unit(c(ylines, 1, 1), 
-                                         c("lines", "null", "lines")),  
+                           widths = unit(c(ylines, 1, 1),
+                                         c("lines", "null", "lines")),
                            heights = unit(c(1, 1), c("lines", "null"))),
-                           width = unit(1, "npc"), 
+                           width = unit(1, "npc"),
                            height = unit(1, "npc") - unit(2, "lines"),
 			   name = paste("node_boxplot", nid, sep = ""),
 			   gp = gp)
@@ -664,7 +664,7 @@ node_boxplot <- function(obj,
         ## main title
         top <- viewport(layout.pos.col=2, layout.pos.row=1)
         pushViewport(top)
-        if (is.null(mainlab)) {	
+        if (is.null(mainlab)) {
 	  mainlab <- if(id) {
 	    function(id, nobs) sprintf("Node %s (n = %s)", id, nobs)
   	  } else {
@@ -676,14 +676,14 @@ node_boxplot <- function(obj,
 	}
         grid.text(mainlab)
         popViewport()
-	
+
         plot <- viewport(layout.pos.col = 2, layout.pos.row = 2,
                          xscale = c(0, 1), yscale = yscale,
 			 name = paste0("node_boxplot", nid, "plot"),
 			 clip = FALSE)
 
         pushViewport(plot)
-	
+
         grid.yaxis()
         grid.rect(gp = gpar(fill = "transparent"))
 	grid.clip()
@@ -692,19 +692,19 @@ node_boxplot <- function(obj,
 	xr <- 0.5 + width/4
 
         ## box & whiskers
-        grid.lines(unit(c(xl, xr), "npc"), 
+        grid.lines(unit(c(xl, xr), "npc"),
                    unit(x$stats[1], "native"), gp = gpar(col = col))
-        grid.lines(unit(0.5, "npc"), 
+        grid.lines(unit(0.5, "npc"),
                    unit(x$stats[1:2], "native"), gp = gpar(col = col, lty = 2))
-        grid.rect(unit(0.5, "npc"), unit(x$stats[2], "native"), 
+        grid.rect(unit(0.5, "npc"), unit(x$stats[2], "native"),
                   width = unit(width, "npc"), height = unit(diff(x$stats[c(2, 4)]), "native"),
-                  just = c("center", "bottom"), 
+                  just = c("center", "bottom"),
                   gp = gpar(col = col, fill = fill))
-        grid.lines(unit(c(0.5 - width/2, 0.5+width/2), "npc"), 
+        grid.lines(unit(c(0.5 - width/2, 0.5+width/2), "npc"),
                    unit(x$stats[3], "native"), gp = gpar(col = col, lwd = 2))
-        grid.lines(unit(0.5, "npc"), unit(x$stats[4:5], "native"), 
+        grid.lines(unit(0.5, "npc"), unit(x$stats[4:5], "native"),
                    gp = gpar(col = col, lty = 2))
-        grid.lines(unit(c(xl, xr), "npc"), unit(x$stats[5], "native"), 
+        grid.lines(unit(c(xl, xr), "npc"), unit(x$stats[5], "native"),
                    gp = gpar(col = col))
 
         ## outlier
@@ -712,14 +712,14 @@ node_boxplot <- function(obj,
         if (n > 0) {
             index <- 1:n ## which(x$out > yscale[1] & x$out < yscale[2])
             if (length(index) > 0)
-                grid.points(unit(rep.int(0.5, length(index)), "npc"), 
+                grid.points(unit(rep.int(0.5, length(index)), "npc"),
                             unit(x$out[index], "native"),
                             size = unit(cex, "char"), gp = gpar(col = col))
         }
-	
+
         upViewport(2)
     }
-    
+
     return(rval)
 }
 class(node_boxplot) <- "grapcon_generator"
@@ -733,7 +733,7 @@ node_surv <- function(obj, col = "black", bg = "white", yscale = c(0, 1), ylines
 
     ## helper functions
     mysurvfit <- function(y, weights, ...)
-        survfit(y ~ 1, weights = weights) 
+        survfit(y ~ 1, weights = weights)
         ### structure(
         ###   survival:::survfitKM(x = gl(1, NROW(y)), y = y, casewt = weights, ...),
 	### class = "survfit")
@@ -746,7 +746,7 @@ node_surv <- function(obj, col = "black", bg = "white", yscale = c(0, 1), ylines
             y <- y[-1]
         }
         n <- length(x)
-        if (n > 2) {  
+        if (n > 2) {
             # replace verbose horizonal sequences like
             # (1, .2), (1.4, .2), (1.8, .2), (2.3, .2), (2.9, .2), (3, .1)
             # with (1, .2), (3, .1).  They are slow, and can smear the looks
@@ -787,10 +787,10 @@ node_surv <- function(obj, col = "black", bg = "white", yscale = c(0, 1), ylines
         xscale <- c(0, max(y[,1]))
 
         top_vp <- viewport(layout = grid.layout(nrow = 2, ncol = 3,
-                           widths = unit(c(ylines, 1, 1), 
-                                         c("lines", "null", "lines")),  
+                           widths = unit(c(ylines, 1, 1),
+                                         c("lines", "null", "lines")),
                            heights = unit(c(1, 1), c("lines", "null"))),
-                           width = unit(1, "npc"), 
+                           width = unit(1, "npc"),
                            height = unit(1, "npc") - unit(2, "lines"),
 			   name = paste("node_surv", nid, sep = ""), gp = gp)
 
@@ -800,7 +800,7 @@ node_surv <- function(obj, col = "black", bg = "white", yscale = c(0, 1), ylines
         ## main title
         top <- viewport(layout.pos.col=2, layout.pos.row=1)
         pushViewport(top)
-        if (is.null(mainlab)) {	
+        if (is.null(mainlab)) {
 	  mainlab <- if(id) {
 	    function(id, nobs) sprintf("Node %s (n = %s)", id, nobs)
   	  } else {
@@ -812,7 +812,7 @@ node_surv <- function(obj, col = "black", bg = "white", yscale = c(0, 1), ylines
 	}
         grid.text(mainlab)
         popViewport()
-	
+
         plot <- viewport(layout.pos.col=2, layout.pos.row=2,
                          xscale=xscale, yscale = yscale,
 			 name = paste0("node_surv", nid, "plot"),
@@ -848,7 +848,7 @@ node_ecdf <- function(obj, col = "black", bg = "white", ylines = 2,
             y <- y[-1]
         }
         n <- length(x)
-        if (n > 2) {  
+        if (n > 2) {
             # replace verbose horizonal sequences like
             # (1, .2), (1.4, .2), (1.8, .2), (2.3, .2), (2.9, .2), (3, .1)
             # with (1, .2), (3, .1).  They are slow, and can smear the looks
@@ -893,10 +893,10 @@ node_ecdf <- function(obj, col = "black", bg = "white", ylines = 2,
         a$y <- c(0, 0, a$y, 1)
 
         top_vp <- viewport(layout = grid.layout(nrow = 2, ncol = 3,
-                           widths = unit(c(ylines, 1, 1), 
-                                         c("lines", "null", "lines")),  
+                           widths = unit(c(ylines, 1, 1),
+                                         c("lines", "null", "lines")),
                            heights = unit(c(1, 1), c("lines", "null"))),
-                           width = unit(1, "npc"), 
+                           width = unit(1, "npc"),
                            height = unit(1, "npc") - unit(2, "lines"),
 			   name = paste("node_ecdf", nid, sep = ""), gp = gp)
 
@@ -906,7 +906,7 @@ node_ecdf <- function(obj, col = "black", bg = "white", ylines = 2,
         ## main title
         top <- viewport(layout.pos.col=2, layout.pos.row=1)
         pushViewport(top)
-        if (is.null(mainlab)) {	
+        if (is.null(mainlab)) {
 	  mainlab <- if(id) {
 	    function(id, nobs) sprintf("Node %s (n = %s)", id, nobs)
   	  } else {
@@ -918,7 +918,7 @@ node_ecdf <- function(obj, col = "black", bg = "white", ylines = 2,
 	}
         grid.text(mainlab)
         popViewport()
-	
+
         plot <- viewport(layout.pos.col=2, layout.pos.row=2,
                          xscale=xscale, yscale=yscale,
 			 name = paste0("node_surv", nid, "plot"),
@@ -940,7 +940,7 @@ class(node_ecdf) <- "grapcon_generator"
 
 
 node_mvar <- function(obj, which = NULL, id = TRUE, pop = TRUE, ylines = NULL, mainlab = NULL, varlab = TRUE, bg = "white", ...)
-{  
+{
   ## obtain dependent variables
   y <- obj$fitted[["(response)"]]
 
@@ -952,7 +952,7 @@ node_mvar <- function(obj, which = NULL, id = TRUE, pop = TRUE, ylines = NULL, m
   k <- length(which)
 
   rval <- function(node) {
-    
+
     tid <- id_node(node)
     nobs <- .nobs_party(obj, id = tid)
 
@@ -965,7 +965,7 @@ node_mvar <- function(obj, which = NULL, id = TRUE, pop = TRUE, ylines = NULL, m
     grid.rect(gp = gpar(fill = bg, col = 0))
 
     ## main title
-    if (is.null(mainlab)) { 
+    if (is.null(mainlab)) {
       mainlab <- if(id) {
     	function(id, nobs) sprintf("Node %s (n = %s)", id, nobs)
       } else {
@@ -975,7 +975,7 @@ node_mvar <- function(obj, which = NULL, id = TRUE, pop = TRUE, ylines = NULL, m
     if (is.function(mainlab)) {
       mainlab <- mainlab(tid, nobs)
     }
-    
+
     for(i in 1L:k) {
       tmp <- obj
       tmp$fitted[["(response)"]] <- y[,which[i]]
@@ -1001,7 +1001,7 @@ node_mvar <- function(obj, which = NULL, id = TRUE, pop = TRUE, ylines = NULL, m
     }
     if(pop) popViewport() else upViewport()
   }
-  
+
   return(rval)
 }
 class(node_mvar) <- "grapcon_generator"

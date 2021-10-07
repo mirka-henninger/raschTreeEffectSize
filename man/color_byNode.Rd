@@ -5,12 +5,14 @@
 \title{Helper function to to be used for the 'col' argument in the plot method for Raschtrees
 Helps to color item parameter in profileplots by inner nodes and ETS Mantel-Haenszel classification}
 \usage{
-color_byNode(nodeID, difficultyColor, panelColor)
+color_byNode(nodeID, classColor, classSize, classShape, panelColor)
 }
 \arguments{
 \item{nodeID}{An integer indicating the inner node after which the item paramter should be colored}
 
-\item{difficultyColor}{A character vector indicating the colors for items classified as A, B, or C}
+\item{classColor}{A character vector indicating the colors for items classified as A, B, or C}
+
+\item{classSize}{A character vector indicating the size for items classified as A, B, or C}
 
 \item{panelColor}{A character vector indicating the colors of the background panels for left and right terminal nodes of the inner node by which items are colored}
 }

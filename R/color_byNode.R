@@ -2,15 +2,17 @@
 #' Helps to color item parameter in profileplots by inner nodes and ETS Mantel-Haenszel classification
 #'
 #' @param nodeID An integer indicating the inner node after which the item paramter should be colored
-#' @param difficultyColor A character vector indicating the colors for items classified as A, B, or C
+#' @param classColor A character vector indicating the colors for items classified as A, B, or C
+#' @param classSize A character vector indicating the size for items classified as A, B, or C
 #' @param panelColor A character vector indicating the colors of the background panels for left and right terminal nodes of the inner node by which items are colored
 #'
 #' @return A function that takes the argument 'purification'nodeID' and 'color' and can be used as a value for the argument 'terminal_panel' in plot.raschtree()
-color_byNode <- function(nodeID, difficultyColor, panelColor) {
+color_byNode <- function(nodeID, classColor, classSize, classShape, panelColor) {
   return_colorFun <- function(object, ...){
     returnFun <-
       node_profileplot(object,
-                       col = create_colorList(object, nodeID = nodeID, cols = difficultyColor),
+                       col = create_colorList(object, nodeID = nodeID, pars = classColor),
+                       cex = create_colorList(object, nodeID = nodeID, pars = classSize),
                        border = "black",
                        bg = create_bgList(object, nodeID = nodeID, backgroundCols = panelColor))
     return(returnFun)
@@ -19,14 +21,14 @@ color_byNode <- function(nodeID, difficultyColor, panelColor) {
   class(return_colorFun) <- "grapcon_generator"
   return(return_colorFun)
 }
-#' Helper function to create a list with colors for each terminal node
+#' Helper function to create a list with colors and point sizes for each terminal node
 #'
 #' @param object An object of class raschtree that has the mantelHaenszel statistic added to it.
 #' @param nodeID An integer indicating the inner node after which the item paramter should be colored
 #' @param cols A character vector of length three indicating the colors in which items classified as A/B/C should be displayed
 #'
 #' @return A list named after the terminal nodes containing the colors of the item parameter based on ETS Mantel-Haenszel classification
-create_colorList <- function(object, nodeID, cols){
+create_colorList <- function(object, nodeID, pars){
   # check whether Delta-MH is saved in the Raschtree object
   if(is.null(object$info$mantelHaenszel))
     stop("No Mantel-Haenszel classification found. Please use the add_mantelHaenszel function to add Mantel-Haenszel effect size measures to the Raschtree object")
@@ -48,7 +50,7 @@ create_colorList <- function(object, nodeID, cols){
   # create the color list
   MHclassi <- object$info$mantelHaenszel$classification
   colorInfo <- data.frame(MHclassi)[,which(colnames(MHclassi) == paste("node", nodeID, sep = ""))]
-  colFun <- function(x){ifelse(x == "A", cols[1], ifelse(x == "B", cols[2], ifelse(x == "C", cols[3], x)))}
+  colFun <- function(x){ifelse(x == "A", pars[1], ifelse(x == "B", pars[2], ifelse(x == "C", pars[3], x)))}
   colorBy <- colFun(colorInfo)
 
   colorList <- rep(list(list()), length(allTerminalNodes))
