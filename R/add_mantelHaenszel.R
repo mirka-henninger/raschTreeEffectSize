@@ -42,7 +42,7 @@ plot.raschtreeMH <- function(x,
                              showETSMH = TRUE,
                              colorbyNode = NULL,
                              ABCcolors = c("#99e1e3", "#ba6100", "#6c0200"),
-                             ABCsize = c(.35,.7,1),
+                             ABCsize = c(.4,.75,.9),
                              nodeBackground = c("#eee3af", "#aeaeae"), ...){
 
   # define inner and terminal panels
