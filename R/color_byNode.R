@@ -14,10 +14,11 @@ color_byNode <- function(nodeID, classColor, classSize, classShape, panelColor) 
                        col = create_colorList(object, nodeID = nodeID, pars = classColor, default = "black"),
                        cex = create_colorList(object, nodeID = nodeID, pars = classSize, default = .4),
                        border = "black",
-                       bg = create_bgList(object, nodeID = nodeID, backgroundCols = panelColor))
+                       bg = create_bgList(object, nodeID = nodeID, backgroundCols = panelColor),
+                       cf_fun = anchor_pars(nodeID))
     return(returnFun)
   }
-  print(paste("Colored by Node", nodeID))
+  message(paste("Colored by Node", nodeID))
   class(return_colorFun) <- "grapcon_generator"
   return(return_colorFun)
 }
@@ -101,3 +102,33 @@ create_bgList <- function(object, nodeID, backgroundCols){
   return(bgList)
 }
 
+#' Helper function to extract cf from mob object depending on the anchor items
+#'
+#' @param object An object of class raschtree that has the mantelHaenszel statistic added to it.
+#' @param nodes
+#'
+#' @return cf
+anchor_pars <- function(nodeID){
+  return(function(object, nodes){
+    # get IDs of inner nodes
+    innerNodes <- get_innerNodes(partykit::node_party(object))
+    innerNodesIDs <- sapply(innerNodes, function(x) x$id)
+
+    # get terminal nodes of nodeID and the remaining node IDs
+    whichID <- which(innerNodesIDs == nodeID)
+    anchoringNodes <- get_terminalNodes(innerNodes[[whichID]])
+    otherNodes <- nodes[!nodes %in% anchoringNodes]
+
+    # use only no-DIF items in a specific node for anchoring
+    MHclassi <- object$info$mantelHaenszel$classification
+    anchorInfo <- data.frame(MHclassi)[,which(colnames(MHclassi) == paste("node", nodeID, sep = ""))]
+    anchorItems <- which(anchorInfo == "A")
+    message("Anchor-Items:"); message(paste(anchorItems, "- "))
+    # only terminal nodes of the inner node are anchored, other nodes use sum-to-zero
+    unchanged <- apply_to_models(object, otherNodes, FUN = function(x) coef(itempar(x, alias = TRUE, vcov = FALSE)))
+    anchored <- apply_to_models(object, anchoringNodes, FUN = function(x) coef(itempar(x, ref = anchorItems, alias = TRUE, vcov = FALSE)))
+    cf <- as.list(c(unchanged, anchored))
+    cf <- cf[order(names(cf))]
+    return(cf)
+  })
+}

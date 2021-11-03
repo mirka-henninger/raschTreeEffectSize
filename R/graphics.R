@@ -2,7 +2,7 @@
 
 ## profile plot visualization function
 node_profileplot <- function(mobobj, what = c("items", "thresholds", "discriminations"),
-  parg = list(type = NULL, ref = NULL, alias = TRUE), id = TRUE, names = FALSE,
+  parg = list(type = NULL, ref = NULL, alias = TRUE), cf_fun = NULL, id = TRUE, names = FALSE,
   abbreviate = TRUE, index = TRUE, ref = TRUE, col = "black", border = col,
   linecol = "black", refcol = "lightgray", bg = "white", cex = 0.5, pch = 21,
   xscale = NULL, yscale = NULL, ylines = 2, ...)
@@ -19,7 +19,9 @@ node_profileplot <- function(mobobj, what = c("items", "thresholds", "discrimina
   node <- nodeids(mobobj, terminal = FALSE)
 
   ## get all coefficients
-  if (what == "items") {
+  if (is.function(cf_fun)) {
+    cf <- cf_fun(mobobj, node)
+  } else if (what == "items") {
     cf <- apply_to_models(mobobj, node, FUN = function(z) coef(itempar(z, ref = refpar, alias = alias, vcov = FALSE)))
   } else if (what == "thresholds") {
     cf <- apply_to_models(mobobj, node, FUN = function(z) coef(threshpar(z, type = type, ref = refpar, alias = alias, vcov = FALSE), type = "matrix"))
@@ -127,7 +129,8 @@ node_profileplot <- function(mobobj, what = c("items", "thresholds", "discrimina
     plot_vpi <- viewport(layout.pos.col = 2, layout.pos.row = 2, xscale = xscale, yscale = yscale,
                                name = paste("node_profileplot", idn, "plot", sep = ""))
     pushViewport(plot_vpi)
-    grid.lines(xscale, c(mean(cfi), mean(cfi)), gp = gpar(col = refcol), default.units = "native")
+    ## remove the vertical grey line that is the mean of the item parameters and replace by line at 0
+    # grid.lines(xscale, c(mean(cfi), mean(cfi)), gp = gpar(col = refcol), default.units = "native")
     if(index) {
       if (what == "thresholds") {
         for (j in 1:ncol(cfi)) {

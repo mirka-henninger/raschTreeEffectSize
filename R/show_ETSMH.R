@@ -20,7 +20,7 @@ show_ETSMH <- function(object, id = TRUE, pval = TRUE, abbreviate = FALSE, fill 
   tableMH <- sapply(MH, table)
   tabMH <- apply(tableMH, 2, function(x) paste(rownames(tableMH), ":", x, "; ", sep = ""))
   tabMH <- apply(tabMH, 2, function(x) paste(c(rep("_", 14), "\nETS-MH: ", x), collapse = ""))
-  print(paste("Purification of ETS-MH:", object$info$mantelHaenszel$purification[1], sep = " "))
+  message(paste("Purification of ETS-MH:", object$info$mantelHaenszel$purification[1], sep = " "))
 
   # original node_inner function
   meta <- object$data
