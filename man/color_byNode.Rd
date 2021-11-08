@@ -5,7 +5,7 @@
 \title{Helper function to to be used for the 'col' argument in the plot method for Raschtrees
 Helps to color item parameter in profileplots by inner nodes and ETS Mantel-Haenszel classification}
 \usage{
-color_byNode(nodeID, classColor, classSize, classShape, panelColor)
+color_byNode(nodeID, classColor, classSize, panelColor)
 }
 \arguments{
 \item{nodeID}{An integer indicating the inner node after which the item paramter should be colored}

@@ -7,7 +7,7 @@
 #' @param panelColor A character vector indicating the colors of the background panels for left and right terminal nodes of the inner node by which items are colored
 #'
 #' @return A function that takes the argument 'purification'nodeID' and 'color' and can be used as a value for the argument 'terminal_panel' in plot.raschtree()
-color_byNode <- function(nodeID, classColor, classSize, classShape, panelColor) {
+color_byNode <- function(nodeID, classColor, classSize, panelColor) {
   return_colorFun <- function(object, ...){
     returnFun <-
       node_profileplot(object,
@@ -26,7 +26,8 @@ color_byNode <- function(nodeID, classColor, classSize, classShape, panelColor) 
 #'
 #' @param object An object of class raschtree that has the mantelHaenszel statistic added to it.
 #' @param nodeID An integer indicating the inner node after which the item paramter should be colored
-#' @param cols A character vector of length three indicating the colors in which items classified as A/B/C should be displayed
+#' @param pars A character vector of length three indicating the colors in which items classified as A/B/C should be displayed
+#' @param default The default color for end nodes that are not colored
 #'
 #' @return A list named after the terminal nodes containing the colors of the item parameter based on ETS Mantel-Haenszel classification
 create_colorList <- function(object, nodeID, pars, default){
@@ -101,13 +102,11 @@ create_bgList <- function(object, nodeID, backgroundCols){
   }
   return(bgList)
 }
-
-#' Helper function to extract cf from mob object depending on the anchor items
+#' Helper function for anchoring items in the Rasch tree profile plot
 #'
-#' @param object An object of class raschtree that has the mantelHaenszel statistic added to it.
-#' @param nodes
+#' @param nodeID An integer indicating the inner node after which the item paramter should be colored
 #'
-#' @return cf
+#' @return function cf that will be used to extract anchored item parameter from the mob object
 anchor_pars <- function(nodeID){
   return(function(object, nodes){
     # get IDs of inner nodes

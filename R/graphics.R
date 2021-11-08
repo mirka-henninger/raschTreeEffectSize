@@ -183,7 +183,7 @@ node_regionplot <- function(mobobj, names = FALSE, abbreviate = TRUE, type = c("
   xlim <- c(xi[1], xi[m + 1])
 
   ## setup axis range
-  if (is.null(ylim)) ylim <- extendrange(unlist(delta_lst, use.names = FALSE), f = 0.25)
+  if (is.null(ylim)) ylim <- grDevices::extendrange(unlist(delta_lst, use.names = FALSE), f = 0.25)
 
   ## labeling
   if (isTRUE(names)) {

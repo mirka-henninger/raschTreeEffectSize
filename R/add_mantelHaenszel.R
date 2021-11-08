@@ -33,6 +33,7 @@ add_mantelHaenszel <- function(object, purification){
 #' @param showETSMH A logical with default is TRUE: Should the ETS-Mantel-Haenszel classification be shown in each inner node?
 #' @param colorbyNode An integer indicating the inner node after which the item paramter should be colored
 #' @param ABCcolors A character vector of length three indicating the colors in which items classified as A/B/C should be displayed
+#' @param ABCsize A vector of length three indicating the size in which items classified as A/B/C should be displayed
 #' @param nodeBackground A character vector of length two indicating the background colors of the panels for which the items have been compared
 #' @param ... arguments passed to the underlying functions, i.e., to mob_control for raschtree, and to the underlying predict and plot methods, respectively.
 #' @return An object of S3 class "raschtree" inheriting from class "modelparty".

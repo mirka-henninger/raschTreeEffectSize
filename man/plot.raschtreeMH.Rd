@@ -9,7 +9,7 @@
   showETSMH = TRUE,
   colorbyNode = NULL,
   ABCcolors = c("#99e1e3", "#ba6100", "#6c0200"),
-  ABCsize = c(0.35, 0.7, 1),
+  ABCsize = c(0.4, 0.75, 0.9),
   nodeBackground = c("#eee3af", "#aeaeae"),
   ...
 )
@@ -22,6 +22,8 @@
 \item{colorbyNode}{An integer indicating the inner node after which the item paramter should be colored}
 
 \item{ABCcolors}{A character vector of length three indicating the colors in which items classified as A/B/C should be displayed}
+
+\item{ABCsize}{A vector of length three indicating the size in which items classified as A/B/C should be displayed}
 
 \item{nodeBackground}{A character vector of length two indicating the background colors of the panels for which the items have been compared}
 

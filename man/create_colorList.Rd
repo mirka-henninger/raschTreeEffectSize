@@ -4,14 +4,16 @@
 \alias{create_colorList}
 \title{Helper function to create a list with colors and point sizes for each terminal node}
 \usage{
-create_colorList(object, nodeID, pars)
+create_colorList(object, nodeID, pars, default)
 }
 \arguments{
 \item{object}{An object of class raschtree that has the mantelHaenszel statistic added to it.}
 
 \item{nodeID}{An integer indicating the inner node after which the item paramter should be colored}
 
-\item{cols}{A character vector of length three indicating the colors in which items classified as A/B/C should be displayed}
+\item{pars}{A character vector of length three indicating the colors in which items classified as A/B/C should be displayed}
+
+\item{default}{The default color for end nodes that are not colored}
 }
 \value{
 A list named after the terminal nodes containing the colors of the item parameter based on ETS Mantel-Haenszel classification
