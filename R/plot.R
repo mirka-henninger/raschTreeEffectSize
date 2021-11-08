@@ -733,7 +733,7 @@ node_surv <- function(obj, col = "black", bg = "white", yscale = c(0, 1), ylines
 
     ## helper functions
     mysurvfit <- function(y, weights, ...)
-        survfit(y ~ 1, weights = weights)
+        survival::survfit(y ~ 1, weights = weights)
         ### structure(
         ###   survival:::survfitKM(x = gl(1, NROW(y)), y = y, casewt = weights, ...),
 	### class = "survfit")

@@ -23,4 +23,7 @@ Imports:
     sandwich, 
     strucchange,
     Formula,
-    utils
+    utils,
+    rpart,
+    vcd,
+    survival

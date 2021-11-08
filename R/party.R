@@ -11,19 +11,19 @@ party <- function(node, data, fitted = NULL, terms = NULL, names = NULL, info = 
 
     stopifnot(inherits(node, "partynode"))
     stopifnot(inherits(data, "data.frame"))
-    ### make sure all split variables are there 
+    ### make sure all split variables are there
     ids <- nodeids(node)[!nodeids(node) %in% nodeids(node, terminal = TRUE)]
-    varids <- unique(unlist(nodeapply(node, ids = ids, FUN = function(x) 
+    varids <- unique(unlist(nodeapply(node, ids = ids, FUN = function(x)
         varid_split(split_node(x)))))
     stopifnot(varids %in% 1:ncol(data))
-    
+
     if(!is.null(fitted)) {
         stopifnot(inherits(fitted, "data.frame"))
         stopifnot(nrow(data) == 0L | nrow(data) == nrow(fitted))
-        
+
 	# try to provide default variable "(fitted)"
 	if(nrow(data) > 0L) {
-          if(!("(fitted)" %in% names(fitted))) 
+          if(!("(fitted)" %in% names(fitted)))
             fitted[["(fitted)"]] <- fitted_node(node, data = data)
 	} else {
 	  stopifnot("(fitted)" == names(fitted)[1L])
@@ -38,12 +38,12 @@ party <- function(node, data, fitted = NULL, terms = NULL, names = NULL, info = 
     } else {
         node <- as.partynode(node, from = 1L)
 	# default "(fitted)"
-	if(nrow(data) > 0L & missing(fitted)) 
-          fitted <- data.frame("(fitted)" = fitted_node(node, 
+	if(nrow(data) > 0L & missing(fitted))
+          fitted <- data.frame("(fitted)" = fitted_node(node,
             data = data), check.names = FALSE)
     }
-    
-    party <- list(node = node, data = data, fitted = fitted, 
+
+    party <- list(node = node, data = data, fitted = fitted,
                   terms = NULL, names = NULL, info = info)
     class(party) <- "party"
 
@@ -90,7 +90,7 @@ node_party <- function(party) {
 
 is.constparty <- function(party) {
     stopifnot(inherits(party, "party"))
-    if (!is.null(party$fitted)) 
+    if (!is.null(party$fitted))
         return(all(c("(fitted)", "(response)") %in% names(party$fitted)))
     return(FALSE)
 }
@@ -114,7 +114,7 @@ as.constparty <- function(obj, ...) {
         class(ret) <- c("constparty", class(obj))
         return(ret)
     }
-    stop("cannot coerce object of class", " ", sQuote(class(obj)), 
+    stop("cannot coerce object of class", " ", sQuote(class(obj)),
           " ", "to", " ", sQuote("constparty"))
 }
 
@@ -144,7 +144,7 @@ as.constparty <- function(obj, ...) {
     }
     node <- recFun(node_party(x))
 
-    ret <- party(node = node, data = dat, fitted = fit, 
+    ret <- party(node = node, data = dat, fitted = fit,
                  terms = x$terms, names = nam, info = x$info)
     class(ret) <- class(x)
     ret
@@ -165,11 +165,11 @@ nodeids.partynode <- function(obj, from = NULL, terminal = FALSE, ...) {
           if(is.terminal(node)) return(id_node(node)) else return(NULL)
     }
 
-    rid <- function(node, record = TRUE, terminal = FALSE) {  
+    rid <- function(node, record = TRUE, terminal = FALSE) {
         myid <- id(node, record = record, terminal = terminal)
         if(is.terminal(node)) return(myid)
-        kids <- kids_node(node)    
-        kids_record <- if(record)  
+        kids <- kids_node(node)
+        kids_record <- if(record)
             rep(TRUE, length(kids))
         else
             sapply(kids, id_node) == from
@@ -221,7 +221,7 @@ nodeapply.partynode <- function(obj, ids = 1, FUN = NULL, ...) {
     rval <- vector(mode = "list", length = length(ids))
     rval_id <- rep(0, length(ids))
     i <- 1
-	
+
     recFUN <- function(node, ...) {
         if(id_node(node) %in% ids) {
             rval_id[i] <<- id_node(node)
@@ -242,16 +242,16 @@ nodeapply.partynode <- function(obj, ids = 1, FUN = NULL, ...) {
 predict.party <- function(object, newdata = NULL, perm = NULL, ...)
 {
     ### compute fitted node ids first
-    fitted <- if(is.null(newdata) && is.null(perm)) {    
-        object$fitted[["(fitted)"]]	
+    fitted <- if(is.null(newdata) && is.null(perm)) {
+        object$fitted[["(fitted)"]]
     } else {
       if (is.null(newdata)) newdata <- model.frame(object)
       terminal <- nodeids(object, terminal = TRUE)
-	
+
       if(max(terminal) == 1L) {
         rep.int(1L, NROW(newdata))
       } else {
-	
+
         inner <- 1L:max(terminal)
         inner <- inner[-terminal]
 
@@ -282,35 +282,35 @@ predict.party <- function(object, newdata = NULL, perm = NULL, ...)
         }
 
         ## ## FIXME: the is.na() call takes loooong on large data sets
-        ## unames <- if(any(sapply(newdata, is.na))) 
+        ## unames <- if(any(sapply(newdata, is.na)))
         ##     vnames[unique(unlist(c(primary_vars, surrogate_vars)))]
-        ## else 
+        ## else
         ##     vnames[unique(unlist(primary_vars))]
 	unames <- vnames[unique(unlist(c(primary_vars, surrogate_vars)))]
-	
+
         vclass <- structure(lapply(object$data, class), .Names = vnames)
         ndnames <- names(newdata)
         ndclass <- structure(lapply(newdata, class), .Names = ndnames)
-        checkclass <- all(sapply(unames, function(x) 
+        checkclass <- all(sapply(unames, function(x)
           isTRUE(all.equal(vclass[[x]], ndclass[[x]]))))
         factors <- sapply(unames, function(x) inherits(object$data[[x]], "factor"))
-        checkfactors <- all(sapply(unames[factors], function(x) 
+        checkfactors <- all(sapply(unames[factors], function(x)
           isTRUE(all.equal(levels(object$data[[x]]), levels(newdata[[x]])))))
         ## FIXME: inform about wrong classes / factor levels?
         if(all(unames %in% ndnames) && checkclass && checkfactors) {
             vmatch <- match(vnames, ndnames)
-            fitted_node(node_party(object), data = newdata, 
+            fitted_node(node_party(object), data = newdata,
                         vmatch = vmatch, perm = perm)
         } else {
             if (!is.null(object$terms)) {
                 ### <FIXME> this won't work for multivariate responses
                 ### </FIXME>
-                xlev <- lapply(unames[factors], 
+                xlev <- lapply(unames[factors],
                                function(x) levels(object$data[[x]]))
                 names(xlev) <- unames[factors]
                 mf <- model.frame(delete.response(object$terms), newdata,
                                   xlev = xlev)
-                fitted_node(node_party(object), data = mf, 
+                fitted_node(node_party(object), data = mf,
                             vmatch = match(vnames, names(mf)), perm = perm)
             } else
                 stop("") ## FIXME: write error message
@@ -327,20 +327,20 @@ predict_party <- function(party, id, newdata = NULL, ...)
 ### do nothing expect returning the fitted ids
 predict_party.default <- function(party, id, newdata = NULL, FUN = NULL, ...) {
 
-    if (length(list(...)) > 1) 
+    if (length(list(...)) > 1)
         warning("argument(s)", " ", sQuote(names(list(...))), " ", "have been ignored")
 
     ## get observation names: either node names or
     ## observation names from newdata
     nam <- if(is.null(newdata)) {
-      if(is.null(rnam <- rownames(data_party(party)))) names(party)[id] else rnam      
+      if(is.null(rnam <- rownames(data_party(party)))) names(party)[id] else rnam
     } else {
       rownames(newdata)
     }
     if(length(nam) != length(id)) nam <- NULL
 
     if (!is.null(FUN))
-        return(.simplify_pred(nodeapply(party, 
+        return(.simplify_pred(nodeapply(party,
             nodeids(party, terminal = TRUE), FUN, by_node = TRUE), id, nam))
 
     ## special case: fitted ids
@@ -373,7 +373,7 @@ predict_party.constparty <- function(party, id, newdata = NULL,
     ### multivariate response
     if (is.data.frame(response)) {
         ret <- lapply(response, function(r) {
-            ret <- .predict_party_constparty(node_party(party), fitted = fitted, 
+            ret <- .predict_party_constparty(node_party(party), fitted = fitted,
                 response = r, weights, id = id, type = type, at = at, FUN = FUN, ...)
             if (simplify) .simplify_pred(ret, id, nam) else ret
         })
@@ -384,7 +384,7 @@ predict_party.constparty <- function(party, id, newdata = NULL,
     }
 
     ### univariate response
-    ret <- .predict_party_constparty(node_party(party), fitted = fitted, response = response, 
+    ret <- .predict_party_constparty(node_party(party), fitted = fitted, response = response,
         weights = weights, id = id, type = type, at = at, FUN = FUN, ...)
     if (simplify) .simplify_pred(ret, id, nam) else ret[as.character(id)]
 }
@@ -392,14 +392,14 @@ predict_party.constparty <- function(party, id, newdata = NULL,
 ### functions for node prediction based on fitted / response
 .pred_Surv <- function(y, w) {
     if (length(y) == 0) return(NA)
-    survfit(y ~ 1, weights = w, subset = w > 0)
+    survival::survfit(y ~ 1, weights = w, subset = w > 0)
 }
 
 .pred_Surv_response <- function(y, w) {
     if (length(y) == 0) return(NA)
     .median_survival_time(.pred_Surv(y, w))
 }
- 
+
 .pred_factor <- function(y, w) {
     lev <- levels(y)
     sumw <- tapply(w, y, sum)
@@ -412,12 +412,12 @@ predict_party.constparty <- function(party, id, newdata = NULL,
 .pred_factor_response <- function(y, w) {
     prob <- .pred_factor(y, w)
     return(factor(which.max(prob), levels = 1:nlevels(y),
-                  labels = levels(y), 
+                  labels = levels(y),
                   ordered = is.ordered(y)))
-    return(prob) 
+    return(prob)
 }
-                    
-.pred_numeric_response <- function(y, w) 
+
+.pred_numeric_response <- function(y, w)
     weighted.mean(y, w, na.rm = TRUE)
 
 .pred_ecdf <- function(y, w) {
@@ -450,7 +450,7 @@ predict_party.constparty <- function(party, id, newdata = NULL,
     if (is.null(FUN)) {
 
         rtype <- class(response)[1]
-        if (rtype == "ordered") rtype <- "factor"    
+        if (rtype == "ordered") rtype <- "factor"
         if (rtype == "integer") rtype <- "numeric"
         if (rtype == "AsIs") rtype <- "numeric"
 
@@ -463,14 +463,14 @@ predict_party.constparty <- function(party, id, newdata = NULL,
             "numeric" = switch(type,
                 "response" = .pred_numeric_response,
                 "prob" = .pred_ecdf,
-                "quantile" = .pred_quantile, 
-                "density" = .pred_density) 
+                "quantile" = .pred_quantile,
+                "density" = .pred_density)
        )
     }
-      
+
     ## empirical distribution in each leaf
     if (all(id %in% fitted)) {
-        tab <- tapply(1:NROW(response), fitted, 
+        tab <- tapply(1:NROW(response), fitted,
                       function(i) FUN(response[i], weights[i]), simplify = FALSE)
     } else {
         ### id may also refer to inner nodes
@@ -504,10 +504,10 @@ predict_party.constparty <- function(party, id, newdata = NULL,
         ret <- if (is.factor(tab[[1]]) & !is.factor(ret))
             factor(ret[as.character(id)], levels = 1:length(levels(tab[[1]])),
 		   labels = levels(tab[[1]]), ordered = is.ordered(tab[[1]]))
-        else 
+        else
             ret[as.character(id)]
         names(ret) <- nam
-    } else if (length(unique(sapply(tab, length))) == 1 & 
+    } else if (length(unique(sapply(tab, length))) == 1 &
                all(sapply(tab, is.numeric))) {
         ret <- matrix(unlist(tab), nrow = length(tab), byrow = TRUE)
         colnames(ret) <- names(tab[[1]])
@@ -525,7 +525,7 @@ data_party <- function(party, id = 1L)
     UseMethod("data_party")
 
 data_party.default <- function(party, id = 1L) {
-    
+
     extract <- function(id) {
         if(is.null(party$fitted))
             if(nrow(party$data) == 0) return(NULL)
@@ -544,7 +544,7 @@ data_party.default <- function(party, id = 1L) {
     }
     if (length(id) > 1)
         return(lapply(id, extract))
-    else 
+    else
         return(extract(id))
 }
 
@@ -637,22 +637,22 @@ nodeprune.default <- function(x, ids, ...)
     stopifnot(length(i) == 1 & is.numeric(i))
     stopifnot(i <= length(x) & i >= 1)
     i <- as.integer(i)
-    dat <- data_party(x, i)  
+    dat <- data_party(x, i)
     if (!is.null(x$fitted)) {
-        findx <- which("(fitted)" == names(dat))[1]  
-        fit <- dat[,findx:ncol(dat), drop = FALSE]   
+        findx <- which("(fitted)" == names(dat))[1]
+        fit <- dat[,findx:ncol(dat), drop = FALSE]
         dat <- dat[,-(findx:ncol(dat)), drop = FALSE]
         if (ncol(dat) == 0)
             dat <- x$data
     } else {
-        fit <- NULL  
+        fit <- NULL
         dat <- x$data
     }
 
     rule <- c()
 
     recFun <- function(node) {
-        if (id_node(node) == i) return(NULL)   
+        if (id_node(node) == i) return(NULL)
         kid <- sapply(kids_node(node), id_node)
         whichkid <- max(which(kid <= i))
         split <- split_node(node)
@@ -660,24 +660,24 @@ nodeprune.default <- function(x, ids, ...)
         svar <- names(dat)[ivar]
         index <- index_split(split)
         if (is.factor(dat[, svar])) {
-            if (is.null(index)) 
+            if (is.null(index))
                 index <- ((1:nlevels(dat[, svar])) > breaks_split(split)) + 1
             slevels <- levels(dat[, svar])[index == whichkid]
-            srule <- paste(svar, " %in% c(\"", 
+            srule <- paste(svar, " %in% c(\"",
                 paste(slevels, collapse = "\", \"", sep = ""), "\")",
                 sep = "")
         } else {
             if (is.null(index)) index <- 1:length(kid)
-            breaks <- cbind(c(-Inf, breaks_split(split)), 
+            breaks <- cbind(c(-Inf, breaks_split(split)),
                             c(breaks_split(split), Inf))
             sbreak <- breaks[index == whichkid,]
             right <- right_split(split)
             srule <- c()
             if (is.finite(sbreak[1]))
-                srule <- c(srule, 
+                srule <- c(srule,
                     paste(svar, ifelse(right, ">", ">="), sbreak[1]))
             if (is.finite(sbreak[2]))
-                srule <- c(srule, 
+                srule <- c(srule,
                     paste(svar, ifelse(right, "<=", "<"), sbreak[2]))
             srule <- paste(srule, collapse = " & ")
         }
