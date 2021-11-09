@@ -8,9 +8,9 @@
 #' @description Helper functions to use the Mantel-Haenszel effect size measure as a stopping criterion in Rasch trees
 #'
 #' @import psychotools
-#' @import difR
 #' @import grid
 #' @import stats
+#' @importFrom difR mantelHaenszel
 #' @importFrom utils capture.output
 #' @importFrom utils head
 #' @importFrom utils tail

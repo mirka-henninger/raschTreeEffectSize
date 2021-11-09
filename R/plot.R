@@ -387,53 +387,53 @@ plot.party <- function(x, main = NULL,
     if (pop) popViewport() else upViewport()
 }
 
-plot.constparty <- function(x, main = NULL,
-                        terminal_panel = NULL, tp_args = list(),
-	 	        inner_panel = node_inner, ip_args = list(),
-                        edge_panel = edge_simple, ep_args = list(),
-		        type = c("extended", "simple"), drop_terminal = NULL, tnex = NULL,
-		        newpage = TRUE, pop = TRUE, gp = gpar(), ...)
-{
-    ### compute default settings
-    type <- match.arg(type)
-    if (type == "simple") {
-	x <- as.simpleparty(x)
-        if (is.null(terminal_panel))
-            terminal_panel <- node_terminal
-        if (is.null(tnex)) tnex <- 1
-        if (is.null(drop_terminal)) drop_terminal <- FALSE
-        if (is.null(tp_args) || length(tp_args) < 1L) {
-	  tp_args <- list(FUN = .make_formatinfo_simpleparty(x, digits = getOption("digits") - 4L, sep = "\n"))
-	} else {
-	  if(is.null(tp_args$FUN)) {
-  	    tp_args$FUN <- .make_formatinfo_simpleparty(x, digits = getOption("digits") - 4L, sep = "\n")
-	  }
-	}
-    } else {
-        if (is.null(terminal_panel)) {
-	    cl <- class(x$fitted[["(response)"]])
-	    if("factor" %in% cl) {
-	        terminal_panel <- node_barplot
-	    } else if("Surv" %in% cl) {
-	        terminal_panel <- node_surv
-            } else if ("data.frame" %in% cl) {
-                terminal_panel <- node_mvar
-                if (is.null(tnex)) tnex <- 2 * NCOL(x$fitted[["(response)"]])
-            } else {
-	        terminal_panel <- node_boxplot
-	    }
-	}
-        if (is.null(tnex)) tnex <- 2
-        if (is.null(drop_terminal)) drop_terminal <- TRUE
-    }
-
-    plot.party(x, main = main,
-      terminal_panel = terminal_panel, tp_args = tp_args,
-      inner_panel = inner_panel, ip_args = ip_args,
-      edge_panel = edge_panel, ep_args = ep_args,
-      drop_terminal = drop_terminal, tnex = tnex,
-      newpage = newpage, pop = pop, gp = gp, ...)
-}
+# plot.constparty <- function(x, main = NULL,
+#                         terminal_panel = NULL, tp_args = list(),
+# 	 	        inner_panel = node_inner, ip_args = list(),
+#                         edge_panel = edge_simple, ep_args = list(),
+# 		        type = c("extended", "simple"), drop_terminal = NULL, tnex = NULL,
+# 		        newpage = TRUE, pop = TRUE, gp = gpar(), ...)
+# {
+#     ### compute default settings
+#     type <- match.arg(type)
+#     if (type == "simple") {
+# 	x <- partykit::as.simpleparty(x)
+#         if (is.null(terminal_panel))
+#             terminal_panel <- node_terminal
+#         if (is.null(tnex)) tnex <- 1
+#         if (is.null(drop_terminal)) drop_terminal <- FALSE
+#         if (is.null(tp_args) || length(tp_args) < 1L) {
+# 	  tp_args <- list(FUN = partykit:::.make_formatinfo_simpleparty(x, digits = getOption("digits") - 4L, sep = "\n"))
+# 	} else {
+# 	  if(is.null(tp_args$FUN)) {
+#   	    tp_args$FUN <- partykit:::.make_formatinfo_simpleparty(x, digits = getOption("digits") - 4L, sep = "\n")
+# 	  }
+# 	}
+#     } else {
+#         if (is.null(terminal_panel)) {
+# 	    cl <- class(x$fitted[["(response)"]])
+# 	    if("factor" %in% cl) {
+# 	        terminal_panel <- node_barplot
+# 	    } else if("Surv" %in% cl) {
+# 	        terminal_panel <- node_surv
+#             } else if ("data.frame" %in% cl) {
+#                 terminal_panel <- node_mvar
+#                 if (is.null(tnex)) tnex <- 2 * NCOL(x$fitted[["(response)"]])
+#             } else {
+# 	        terminal_panel <- node_boxplot
+# 	    }
+# 	}
+#         if (is.null(tnex)) tnex <- 2
+#         if (is.null(drop_terminal)) drop_terminal <- TRUE
+#     }
+#
+#     plot.party(x, main = main,
+#       terminal_panel = terminal_panel, tp_args = tp_args,
+#       inner_panel = inner_panel, ip_args = ip_args,
+#       edge_panel = edge_panel, ep_args = ep_args,
+#       drop_terminal = drop_terminal, tnex = tnex,
+#       newpage = newpage, pop = pop, gp = gp, ...)
+# }
 
 node_barplot <- function(obj,
                          col = "black",

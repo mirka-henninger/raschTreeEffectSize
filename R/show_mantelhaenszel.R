@@ -1,7 +1,7 @@
 #' Helper function to display the ETS Mantel-Haenszel classification summary in each inner node of the Raschtree
 #' @description  This function is largely copied from partykit:::node_inner and adapted to display larger inner nodes with corresponding Mantel-Haenszel classification summaries
 #'
-#' @param object An object of class raschtree that has the mantelHaenszel statistic added to it. See @examples
+#' @param object An object of class raschtree that has the mantelhaenszel statistic added to it. See @examples
 #' @param id Argument copied from partykit:::node_inner
 #' @param pval Argument copied from partykit:::node_inner
 #' @param abbreviate Argument copied from partykit:::node_inner
@@ -9,51 +9,52 @@
 #' @param gp Argument copied from partykit:::node_inner
 #'
 #' @return A function that can be used as a value for the argument 'inner_panel' in plot.raschtree()
-show_ETSMH <- function(object, id = TRUE, pval = TRUE, abbreviate = FALSE, fill = "white", gp = gpar())
+show_mantelhaenszel <- function(object, id = TRUE, pval = TRUE, abbreviate = FALSE,
+                          fill = "white", gp = gpar())
 {
   # check whether Delta-MH is saved in the Raschtree object
-  if(is.null(object$info$mantelHaenszel))
-    warning("No Mantel-Haenszel classification found. Please use the add_mantelHaenszel function to add Mantel-Haenszel effect size measures to the Raschtree object")
+  if(is.null(object$info$mantelhaenszel))
+    stop("No Mantel-Haenszel classification found. Please use the add_mantelhaenszel function to add Mantel-Haenszel effect size measures to the Raschtree object")
   # extract ETS-MH
-  MH <- data.frame(object$info$mantelHaenszel$classification)
+  MH <- data.frame(object$info$mantelhaenszel$classification)
   MH <- lapply(MH, function(x) factor(x, levels = c("A", "B", "C")))
-  tableMH <- sapply(MH, table)
-  tabMH <- apply(tableMH, 2, function(x) paste(rownames(tableMH), ":", x, "; ", sep = ""))
-  tabMH <- apply(tabMH, 2, function(x) paste(c(rep("_", 14), "\nETS-MH: ", x), collapse = ""))
-  message(paste("Purification of ETS-MH:", object$info$mantelHaenszel$purification[1], sep = " "))
+  table_MH <- sapply(MH, table)
+  tab_MH <- apply(table_MH, 2, function(x) paste(rownames(table_MH), ":", x, "; ", sep = ""))
+  tab_MH <- apply(tab_MH, 2, function(x) paste(c(rep("_", 14), "\nETS-MH: ", x), collapse = ""))
+  message(paste("Purification of ETS-MH:", object$info$mantelhaenszel$purification[1], sep = " "))
 
   # original node_inner function
   meta <- object$data
   nam <- names(object)
 
   extract_label <- function(node) {
-    if(is.terminal(node)) return(rep.int("", 2L))
-
+    if(is.terminal(node))
+      return(rep.int("", 2L))
     varlab <- character_split(split_node(node), meta)$name
-    # ETSMHlab <- character_split(split_node(node), tabMH)$name
-    if(abbreviate > 0L) varlab <- abbreviate(varlab, as.integer(abbreviate))
-
-    ## FIXME: make more flexible rather than special-casing p-value
+    if(abbreviate > 0L)
+      varlab <- abbreviate(varlab, as.integer(abbreviate))
     if(pval) {
       nullna <- function(x) is.null(x) || is.na(x)
-      pval <- suppressWarnings(try(!nullna(info_node(node)$p.value), silent = TRUE))
-      pval <- if(inherits(pval, "try-error")) FALSE else pval
+      pval <- suppressWarnings(try(!nullna(info_node(node)$p.value),
+                                   silent = TRUE))
+      pval <- if(inherits(pval, "try-error")) FALSE
+      else pval
     }
     if(pval) {
       pvalue <- node$info$p.value
-      plab <- ifelse(pvalue < 10^(-3L),
-                     paste("p <", 10^(-3L)),
+      plab <- ifelse(pvalue < 10^(-3L), paste("p <", 10^(-3L)),
                      paste("p =", round(pvalue, digits = 3L)))
     } else {
       plab <- ""
     }
-    tabMH <- tabMH[[paste("node", nam[id_node(node)], sep = "")]]
-    return(c(varlab, plab, tabMH))
+    tab_MH <- tab_MH[[paste("node", nam[id_node(node)], sep = "")]]
+    return(c(varlab, plab, tab_MH))
   }
 
   maxstr <- function(node) {
     lab <- extract_label(node)
-    klab <- if(is.terminal(node)) "" else unlist(lapply(kids_node(node), maxstr))
+    klab <- if(is.terminal(node)) ""
+    else unlist(lapply(kids_node(node), maxstr))
     lab <- c(lab, klab)
     lab <- unlist(lapply(lab, function(x) strsplit(x, "\n")))
     lab <- lab[which.max(nchar(lab))]
@@ -66,15 +67,12 @@ show_ETSMH <- function(object, id = TRUE, pval = TRUE, abbreviate = FALSE, fill 
 
   ### panel function for the inner nodes
   rval <- function(node) {
-    pushViewport(viewport(gp = gp, name = paste("node_inner", id_node(node), "_gpar", sep = "")))
-    node_vp <- viewport(
-      x = unit(0.5, "npc"),
-      y = unit(0.5, "npc"),
-      width = unit(1, "strwidth", nstr) * 1.3,
-      height = unit(5, "lines"),
-      name = paste("node_inner", id_node(node), sep = ""),
-      gp = gp
-    )
+    pushViewport(viewport(gp = gp, name = paste("node_inner",
+                                                id_node(node), "_gpar", sep = "")))
+    node_vp <- viewport(x = unit(0.5, "npc"), y = unit(0.5,
+                                                       "npc"), width = unit(1, "strwidth", nstr) * 1.3,
+                        height = unit(5, "lines"), name = paste("node_inner",
+                                                                id_node(node), sep = ""), gp = gp)
     pushViewport(node_vp)
 
     xell <- c(seq(0, 0.2, by = 0.01),
@@ -107,6 +105,6 @@ show_ETSMH <- function(object, id = TRUE, pval = TRUE, abbreviate = FALSE, fill 
   }
   return(rval)
 }
-class(show_ETSMH) <- "grapcon_generator"
+class(show_mantelhaenszel) <- "grapcon_generator"
 
 

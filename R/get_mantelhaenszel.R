@@ -4,42 +4,42 @@
 #' @param purification A character indicating the type of purification ("none", "2step", "iterative")
 #' @param by A character either "node" or "type" defining the structure of the function output
 #'
-#' @return If by = "node": a list with one entry for each node; If by = "type": a list with entries Mantel-Haenszel effect size, classification, purification type, and purificationCounter
+#' @return If by = "node": a list with one entry for each node; If by = "type": a list with entries Mantel-Haenszel effect size, classification, purification type, and purification_counter
 #'
 #' @examples
 #' \dontrun{
 #' data("DIFSim", package = "psychotree")
 #' RT <- raschtree(resp ~ age + gender + motivation, data = DIFSim)
-#' MH <- get_mantelHaenszel(RT, purification = "iterative", by = "type")
+#' MH <- get_mantelhaenszel(RT, purification = "iterative", by = "type")
 #' MH
 #' }
 #'
 #' @export
-get_mantelHaenszel <- function(object, purification, by = "node"){
+get_mantelhaenszel <- function(object, purification, by = "node"){
   # check whether object is of type Raschtree, modelparty, and party
   if(!(all(class(object) %in% c("raschtree", "modelparty", "party"))))
     stop("Object must be an Raschtree object (as returned from the raschtree function")
 
   # extract information from Raschtree
   ids <- which(!(partykit::nodeids(object, terminal = FALSE) %in% partykit::nodeids(object, terminal = TRUE)))
-  datFitted <- partykit::data_party(object) # dataframe with data, split variables and fitted groups (end nodes)
+  dat_fitted <- partykit::data_party(object) # dataframe with data, split variables and fitted groups (end nodes)
   splits <- partykit::node_party(object) # where the splits are
 
   # prepare data for MH
-  splitGroups <- return_splitGroups(node = splits, datFitted)
-  dat <- datFitted[[1]]
+  split_groups <- return_split_groups(node = splits, dat_fitted)
+  dat <- dat_fitted[[1]]
   sums <- rowSums(dat)
-  nodeNames <- paste("node", ids, sep = "")
-  MH <- lapply(splitGroups, function(grp)(calculate_mantelHaenszel(dat = dat, splitGroup = grp, sums = sums, purification = purification)))
+  node_names <- paste("node", ids, sep = "")
+  MH <- lapply(split_groups, function(grp)(calculate_mantelhaenszel(dat = dat, split_group = grp, sums = sums, purification = purification)))
   if(by == "type"){
-    summary_mantelHaenszel <- function(x){
+    summary_mantelhaenszel <- function(x){
       list(classification = sapply(x, function(x) x$classification),
-           mantelHaenszel = sapply(x, function(x) x$mantelHaenszel[1,]),
+           mantelhaenszel = sapply(x, function(x) x$mantelhaenszel[1,]),
            purification =  sapply(x, function(x) x$purification),
-           purificationCounter = sapply(x, function(x) x$purificationCounter)
+           purification_counter = sapply(x, function(x) x$purification_counter)
       )
     }
-    MH <- summary_mantelHaenszel(MH)
+    MH <- summary_mantelhaenszel(MH)
   }
   return(MH)
 }

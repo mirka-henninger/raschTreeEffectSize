@@ -10,7 +10,7 @@ as.party.rpart <- function(obj, data = TRUE, ...) {
     ### make sure to use our own implementation
     ### which works without `model = TRUE' in the rpart call
     mf <- model_frame_rpart(obj)
-    
+
     ## check if any of the variables in the model frame is a "character"
     ## and convert to "factor" if necessary
     for(i in which(sapply(mf, function(x) class(x)[1L]) == "character")) mf[[i]] <- factor(mf[[i]])
@@ -18,7 +18,7 @@ as.party.rpart <- function(obj, data = TRUE, ...) {
     rpart_fitted <- function() {
 	ret <- as.data.frame(matrix(nrow = NROW(mf), ncol = 0))
 	ret[["(fitted)"]] <- obj$where
-        ret[["(response)"]] <- model.response(mf)        
+        ret[["(response)"]] <- model.response(mf)
         ret[["(weights)"]] <- model.weights(mf)
         ret
     }
@@ -41,10 +41,10 @@ as.party.rpart <- function(obj, data = TRUE, ...) {
         if (prim < 1 || ff[i, "nsurrogate"] == 0) return(NULL)
         else return(prim + ff[i, "ncompete"] + 1L:ff[i, "nsurrogate"])
     })
-    
+
     rpart_kids <- function(i) {
         if (is.leaf[i]) return(NULL)
-        else return(c(i + 1L, 
+        else return(c(i + 1L,
             which((cumsum(!is.leaf[-(1L:i)]) + 1L) == cumsum(is.leaf[-(1L:i)]))[1L] + 1L + i))
     }
 
@@ -75,10 +75,10 @@ as.party.rpart <- function(obj, data = TRUE, ...) {
 	}
         ret
     }
-                      
+
     rpart_split <- function(i)
         rpart_onesplit(splitindex$primary[i])
-    
+
     rpart_surrogates <- function(i)
         lapply(splitindex$surrogate[[i]], rpart_onesplit)
 
@@ -102,7 +102,7 @@ as.party.rpart <- function(obj, data = TRUE, ...) {
     node <- rpart_node(1)
 
     }
-    
+
     rval <- party(node = node, data = if(data) mf else mf[0L,],
       fitted = fitted, terms = obj$terms, info = list(method = "rpart"))
     class(rval) <- c("constparty", class(rval))
@@ -112,110 +112,110 @@ as.party.rpart <- function(obj, data = TRUE, ...) {
 model_frame_rpart <- function(formula, ...) {
   ## if model.frame is stored, simply extract
   if(!is.null(formula$model)) return(formula$model)
-  
+
   ## otherwise reevaluate model.frame using original call
   mf <- formula$call
   mf <- mf[c(1L, match(c("formula", "data", "subset", "na.action", "weights"), names(mf), 0L))]
   if (is.null(mf$na.action)) mf$na.action <- rpart::na.rpart
   # mf$drop.unused.levels <- TRUE
   mf[[1L]] <- quote(stats::model.frame)
-  
+
   ## use terms instead of formula in call
   mf$formula <- formula$terms
-  
+
   ## evaluate in the right environment and return
   env <- if(!is.null(environment(formula$terms))) environment(formula$terms) else parent.frame()
   mf <- eval(mf, env)
   return(mf)
 }
 
-as.party.Weka_tree <- function(obj, data = TRUE, ...) {
-
-  ## needs RWeka and rJava
-  stopifnot(requireNamespace("RWeka"))
-
-  ## J48 tree? (can be transformed to "constparty")
-  j48 <- inherits(obj, "J48")
-
-  ## construct metadata
-  mf <- model.frame(obj)
-  mf_class <- sapply(mf, function(x) class(x)[1L])
-  mf_levels <- lapply(mf, levels)
-
-  x <- rJava::.jcall(obj$classifier, "S", "graph")
-  if(j48) {
-    info <- NULL
-  } else {
-    info <- RWeka::parse_Weka_digraph(x, plainleaf = FALSE)$nodes[, 2L]
-    info <- strsplit(info, " (", fixed = TRUE)
-    info <- lapply(info, function(x) if(length(x) == 1L) x else c(x[1L], paste("(", x[-1L], sep = "")))
-  }
-  x <- RWeka::parse_Weka_digraph(x, plainleaf = TRUE)
-  nodes <- x$nodes
-  edges <- x$edges
-  is.leaf <- x$nodes[, "splitvar"] == ""
-
-  weka_tree_kids <- function(i) {
-    if (is.leaf[i]) return(NULL)
-      else return(which(nodes[,"name"] %in% edges[nodes[i,"name"] == edges[,"from"], "to"]))
-  }
-
-  weka_tree_split <- function(i) {
-    if(is.leaf[i]) return(NULL)
-    
-    var_id <- which(nodes[i, "splitvar"] == names(mf))
-    edges <- edges[nodes[i,"name"] == edges[,"from"], "label"]
-    split <- Map(c, sub("^([[:punct:]]+).*$", "\\1", edges), sub("^([[:punct:]]+) *", "", edges))
-    ## ## for J48 the following suffices
-    ## split <- strsplit(edges[nodes[i,"name"] == edges[,"from"], "label"], " ")
-
-    if(mf_class[var_id] %in% c("ordered", "factor")) {
-      stopifnot(all(sapply(split, head, 1) == "="))
-      stopifnot(all(sapply(split, tail, 1) %in% mf_levels[[var_id]]))
-      
-      split <- partysplit(varid = as.integer(var_id),
-        index = match(mf_levels[[var_id]], sapply(split, tail, 1)))
-    } else {
-      breaks <- unique(as.numeric(sapply(split, tail, 1)))
-      breaks <- if(mf_class[var_id] == "integer") as.integer(breaks) else as.double(breaks) ## FIXME: check
-      
-      stopifnot(length(breaks) == 1 && !is.na(breaks))
-      stopifnot(all(sapply(split, head, 1) %in% c("<=", ">")))
-      
-      split <- partysplit(varid = as.integer(var_id),
-        breaks = breaks, right = TRUE,
-	index = if(split[[1L]][1L] == ">") 2L:1L)
-    }
-    return(split)
-  }
-
-  weka_tree_node <- function(i) {
-    if(is.null(weka_tree_kids(i))) return(partynode(as.integer(i), info = info[[i]]))
-    partynode(as.integer(i),
-      split = weka_tree_split(i),
-      kids = lapply(weka_tree_kids(i), weka_tree_node))
-  }
-
-  node <- weka_tree_node(1)
-
-  if(j48) {
-    pty <- party(
-      node = node,
-      data = if(data) mf else mf[0L,],
-      fitted = data.frame("(fitted)" = fitted_node(node, mf),
-        		  "(response)" = model.response(mf),
-        		  check.names = FALSE),
-      terms = obj$terms,
-      info = list(method = "J4.8"))
-    class(pty) <- c("constparty", class(pty))
-  } else {
-    pty <- party(
-      node = node,
-      data = mf[0L,],
-      fitted = data.frame("(fitted)" = fitted_node(node, mf), check.names = FALSE),
-      terms = obj$terms,
-      info = list(method = class(obj)[1L]))      
-  }
-
-  return(pty)
-}
+# as.party.Weka_tree <- function(obj, data = TRUE, ...) {
+#
+#   ## needs RWeka and rJava
+#   stopifnot(requireNamespace("RWeka"))
+#
+#   ## J48 tree? (can be transformed to "constparty")
+#   j48 <- inherits(obj, "J48")
+#
+#   ## construct metadata
+#   mf <- model.frame(obj)
+#   mf_class <- sapply(mf, function(x) class(x)[1L])
+#   mf_levels <- lapply(mf, levels)
+#
+#   x <- rJava::.jcall(obj$classifier, "S", "graph")
+#   if(j48) {
+#     info <- NULL
+#   } else {
+#     info <- RWeka::parse_Weka_digraph(x, plainleaf = FALSE)$nodes[, 2L]
+#     info <- strsplit(info, " (", fixed = TRUE)
+#     info <- lapply(info, function(x) if(length(x) == 1L) x else c(x[1L], paste("(", x[-1L], sep = "")))
+#   }
+#   x <- RWeka::parse_Weka_digraph(x, plainleaf = TRUE)
+#   nodes <- x$nodes
+#   edges <- x$edges
+#   is.leaf <- x$nodes[, "splitvar"] == ""
+#
+#   weka_tree_kids <- function(i) {
+#     if (is.leaf[i]) return(NULL)
+#       else return(which(nodes[,"name"] %in% edges[nodes[i,"name"] == edges[,"from"], "to"]))
+#   }
+#
+#   weka_tree_split <- function(i) {
+#     if(is.leaf[i]) return(NULL)
+#
+#     var_id <- which(nodes[i, "splitvar"] == names(mf))
+#     edges <- edges[nodes[i,"name"] == edges[,"from"], "label"]
+#     split <- Map(c, sub("^([[:punct:]]+).*$", "\\1", edges), sub("^([[:punct:]]+) *", "", edges))
+#     ## ## for J48 the following suffices
+#     ## split <- strsplit(edges[nodes[i,"name"] == edges[,"from"], "label"], " ")
+#
+#     if(mf_class[var_id] %in% c("ordered", "factor")) {
+#       stopifnot(all(sapply(split, head, 1) == "="))
+#       stopifnot(all(sapply(split, tail, 1) %in% mf_levels[[var_id]]))
+#
+#       split <- partysplit(varid = as.integer(var_id),
+#         index = match(mf_levels[[var_id]], sapply(split, tail, 1)))
+#     } else {
+#       breaks <- unique(as.numeric(sapply(split, tail, 1)))
+#       breaks <- if(mf_class[var_id] == "integer") as.integer(breaks) else as.double(breaks) ## FIXME: check
+#
+#       stopifnot(length(breaks) == 1 && !is.na(breaks))
+#       stopifnot(all(sapply(split, head, 1) %in% c("<=", ">")))
+#
+#       split <- partysplit(varid = as.integer(var_id),
+#         breaks = breaks, right = TRUE,
+# 	index = if(split[[1L]][1L] == ">") 2L:1L)
+#     }
+#     return(split)
+#   }
+#
+#   weka_tree_node <- function(i) {
+#     if(is.null(weka_tree_kids(i))) return(partynode(as.integer(i), info = info[[i]]))
+#     partynode(as.integer(i),
+#       split = weka_tree_split(i),
+#       kids = lapply(weka_tree_kids(i), weka_tree_node))
+#   }
+#
+#   node <- weka_tree_node(1)
+#
+#   if(j48) {
+#     pty <- party(
+#       node = node,
+#       data = if(data) mf else mf[0L,],
+#       fitted = data.frame("(fitted)" = fitted_node(node, mf),
+#         		  "(response)" = model.response(mf),
+#         		  check.names = FALSE),
+#       terms = obj$terms,
+#       info = list(method = "J4.8"))
+#     class(pty) <- c("constparty", class(pty))
+#   } else {
+#     pty <- party(
+#       node = node,
+#       data = mf[0L,],
+#       fitted = data.frame("(fitted)" = fitted_node(node, mf), check.names = FALSE),
+#       terms = obj$terms,
+#       info = list(method = class(obj)[1L]))
+#   }
+#
+#   return(pty)
+# }
