@@ -3,7 +3,7 @@ print.partynode <- function(x, data = NULL, names = NULL,
   prefix = "", first = TRUE, digits = getOption("digits") - 2, ...)
 {
   ids <- nodeids(x)
-  
+
   if(first) {
     if(is.null(names)) names <- as.character(ids)
     cat(paste(prefix, "[", names[which(ids == id_node(x))], "] root", sep = ""))
@@ -25,15 +25,15 @@ print.partynode <- function(x, data = NULL, names = NULL,
   if (length(x) > 0) {
     ## add indentation
     nextprefix <- paste(prefix, "|   ", sep = "")
-  
+
     ## split labels
     slabs <- character_split(split_node(x), data = data, digits = digits, ...)
     slabs <- ifelse(substr(slabs$levels, 1, 1) %in% c("<", ">"),
-             paste(slabs$name, slabs$levels), 
+             paste(slabs$name, slabs$levels),
              paste(slabs$name, "in", slabs$levels))
 
     ## kid labels
-    knodes <- kids_node(x)    
+    knodes <- kids_node(x)
     knam <- sapply(knodes, function(z) names[which(ids == id_node(z))])
     klabs <- sapply(knodes, function(z)
       if(is.terminal(z)) {
@@ -50,7 +50,7 @@ print.partynode <- function(x, data = NULL, names = NULL,
       })
 
     ## merge, cat, and call recursively
-    labs <- paste("|   ", prefix, "[", knam, "] ", slabs, klabs, "\n", sep = "")          
+    labs <- paste("|   ", prefix, "[", knam, "] ", slabs, klabs, "\n", sep = "")
     for (i in 1:length(x)) {
       cat(labs[i])
       print.partynode(x[i], data = data, names = names[match(nodeids(x[i]), ids)],
@@ -87,7 +87,7 @@ print.constparty <- function(x,
   FUN = NULL, digits = getOption("digits") - 4,
   header = NULL, footer = TRUE, ...)
 {
-  if(is.null(FUN)) return(print(as.simpleparty(x), digits = digits,
+  if(is.null(FUN)) return(print(partykit::as.simpleparty(x), digits = digits,
     header = header, footer = footer, ...))
 
   digits <- max(c(0, digits))
@@ -97,11 +97,11 @@ print.constparty <- function(x,
   header_panel <- if(header) function(party) {
     c("", "Model formula:", deparse(formula(terms(party))), "", "Fitted party:", "")
   } else function(party) ""
-  
+
   footer_panel <- if(footer) function(party) {
     n <- width(party)
     n <- format(c(length(party) - n, n))
-    
+
     c("", paste("Number of inner nodes:   ", n[1]),
       paste("Number of terminal nodes:", n[2]), "")
   } else function (party) ""
@@ -123,7 +123,7 @@ print.constparty <- function(x,
   yclass <- class(y)[1]
   if(yclass == "ordered") yclass <- "factor"
   if(!(yclass %in% c("Surv", "factor"))) yclass <- "numeric"
-  
+
   if(is.null(FUN)) FUN <- switch(yclass,
     "numeric" = function(y, w, digits) {
       yhat <- .pred_numeric_response(y, w)
@@ -145,7 +145,7 @@ print.constparty <- function(x,
         ", err = ", mc, "%)", sep = "")
     }
   )
-  
+
   node_labs <- nodeapply(x, nodeids(x), function(node) {
     y1 <- node$fitted[["(response)"]]
     w <- node$fitted[["(weights)"]]
@@ -153,7 +153,7 @@ print.constparty <- function(x,
     FUN(y1, w, digits)
   }, by_node = FALSE)
   node_labs <- paste(":", format(do.call("c", node_labs)))
-  
+
   terminal_panel <- function(node) node_labs[id_node(node)]
 
   print.party(x, terminal_panel = terminal_panel,

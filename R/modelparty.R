@@ -1,3 +1,15 @@
+#' MOB is an algorithm for model-based recursive partitioning yielding a tree with fitted models associated with each terminal node.
+#' for more details see ?partykit::mob
+#' @param formula symbolic description of the model
+#' @param data arguments controlling formula processing via model.frame
+#' @param subset arguments controlling formula processing via model.frame
+#' @param na.action arguments controlling formula processing via model.frame
+#' @param weights optional numeric vector of weights. By default these are treated as case weights but the default can be changed in mob_control
+#' @param offset optional numeric vector with an a priori known component to be included in the model y ~ x1 + ... + xk (i.e., only when x variables are specified)
+#' @param cluster optional vector (typically numeric or factor) with a cluster ID to be passed on to the fit function and employed for clustered covariances in the parameter stability tests.
+#' @param fit function. A function for fitting the model within each node. For details see below.
+#' @param control A list with control parameters as returned by mob_control
+#' @param ... Additional arguments passed to the fit function
 mob <- function(formula, data, subset, na.action, weights, offset, cluster,
   fit, control = mob_control(), ...)
 {
@@ -109,7 +121,7 @@ mob <- function(formula, data, subset, na.action, weights, offset, cluster,
 	  function(objfun, df, nobs) (2 * objfun[1L] + log(n) * df[1L]) < (2 * objfun[2L] + log(n) * df[2L])
 	}, "none" = {
 	  NULL
-	})      
+	})
     }
     if(!is.function(control$prune)) {
       warning("Unknown specification of 'prune'")
@@ -133,7 +145,7 @@ mob <- function(formula, data, subset, na.action, weights, offset, cluster,
   if(!is.null(cluster)) fitted[["(cluster)"]] <- cluster
 
   ## return party object
-  rval <- party(nodes, 
+  rval <- party(nodes,
     data = if(control$model) mf else mf[0,],
     fitted = fitted,
     terms = mt,
@@ -206,13 +218,13 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
   ## variable selection: given model scores, conduct
   ## all M-fluctuation tests for orderins in z
   mob_grow_fluctests <- function(estfun, z, weights, obj = NULL, cluster = NULL)
-  {  
+  {
     ## set up return values
     m <- NCOL(z)
     pval <- rep.int(NA_real_, m)
     stat <- rep.int(0, m)
     ifac <- rep.int(FALSE, m)
-    
+
     ## variables to test
     mtest <- if(m <= control$mtry) 1L:m else sort(sample(1L:m, control$mtry))
 
@@ -239,7 +251,7 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
       meat <- if(is.null(cluster)) {
         crossprod(if(control$caseweights) process/sqrt(weights) else process)
       } else {
-        ## nclus <- length(unique(cluster)) ## nclus / (nclus - 1L) * 
+        ## nclus <- length(unique(cluster)) ## nclus / (nclus - 1L) *
         crossprod(as.matrix(apply(if(control$caseweights) process/sqrt(weights) else process, 2L, tapply, as.numeric(cluster), sum)))
       }
     }
@@ -248,7 +260,7 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
       "info" = bread,
       "sandwich" = bread %*% meat %*% bread
     ))
-    process <- t(J12 %*% t(process))  
+    process <- t(J12 %*% t(process))
 
     ## select parameters to test
     if(!is.null(control$parm)) process <- process[, control$parm, drop = FALSE]
@@ -337,7 +349,7 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
   	    stat[i] <- max(proci[tt0] / (tt * (1-tt)))
 	    pval[i] <- log(strucchange::ordL2BB(segweights, nproc = k, nrep = control$nrep)$computePval(stat[i], nproc = k))
 	  }
-	} else {      
+	} else {
           stat[i] <- sum(sapply(1L:k, function(j) (tapply(proci[,j], zi, sum)^2)/segweights))
           pval[i] <- pchisq(stat[i], k*(length(levels(zi))-1), log.p = TRUE, lower.tail = FALSE)
         }
@@ -356,7 +368,7 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
 	  xx <- rowSums(proci^2)
 	  xx <- xx[tt0 >= from & tt0 <= to]
 	  tt <- tt0[tt0 >= from & tt0 <= to]/nobs
-	  max(xx/(tt * (1 - tt)))	  
+	  max(xx/(tt * (1 - tt)))
 	} else {
 	  0
 	}
@@ -381,12 +393,12 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
     ## process minsize (to minimal number of observations)
     if(minsize > 0.5 & minsize < 1) minsize <- 1 - minsize
     if(minsize < 0.5) minsize <- ceiling(w2n(weights) * minsize)
-  
+
     if(is.numeric(zselect)) {
     ## for numerical variables
       uz <- sort(unique(zselect))
       if (length(uz) == 0L) stop("Cannot find admissible split point in partitioning variable")
-      
+
       ## if starting values are not reused then the applyfun() is used for determining the split
       if(control$restart) {
         get_dev <- function(i) {
@@ -453,10 +465,10 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
     } else {
 
       if(!is.ordered(zselect) & control$catsplit == "multiway") {
-        return(list(breaks = NULL, index = seq_along(levels(zselect))))      
+        return(list(breaks = NULL, index = seq_along(levels(zselect))))
       }
 
-      ## for categorical variables      
+      ## for categorical variables
       olevels <- levels(zselect) ## full set of original levels
       zselect <- factor(zselect) ## omit levels that do not occur in the data
       al <- mob_grow_getlevels(zselect)
@@ -502,7 +514,7 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
         }
       }
     }
-  
+
     return(split)
   }
 
@@ -566,7 +578,7 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
       TERMINAL <- TRUE
       test <- list(stat = NA, pval = NA)
     }
-    
+
     ## update model information
     mod$test <- rbind("statistic" = test$stat, "p.value" = test$pval)
 
@@ -575,7 +587,7 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
     } else {
       zselect <- z[[best]]
       sp <- mob_grow_findsplit(y, x, zselect, weights, offset, cluster, ...)
-    
+
       ## split successful?
       if(is.null(sp$breaks) & is.null(sp$index)) {
         if(verbose) cat(sprintf("No admissable split found in %s\n\n", sQuote(names(test$stat)[best])))
@@ -586,7 +598,7 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
 	  paste(character_split(sp, data = z)$levels, collapse = " | ")))
       }
     }
-  
+
     ## actually split the data
     kidids <- kidids_split(sp, data = z)
 
@@ -597,7 +609,7 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
             return(partynode(id = id, info = mod))
         }
     }
-    
+
     ## set-up all daugther nodes
     depth <<- depth + 1L
     kids <- vector(mode = "list", length = max(kidids))
@@ -620,7 +632,7 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
 
     ## shift split varid from z to mf
     sp$varid <- as.integer(varindex[sp$varid])
-    
+
     ## return nodes
     return(partynode(id = id, split = sp, kids = kids, info = mod))
   }
@@ -655,26 +667,26 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
       pnode <- pnode[pok]
       if(length(pnode) < 1L) break
 
-      ## prune nodes and relabel IDs  
+      ## prune nodes and relabel IDs
       pkids <- sort(unlist(sapply(pnode, function(i) nd[[i]]$kids)))
       for(i in id) {
         nd[[i]]$kids <- if(nd[[i]]$id %in% pnode || is.null(kids[[i]])) {
           NULL
-        } else {    
+        } else {
           nd[[i]]$kids - sapply(kids[[i]], function(x) sum(pkids < x))
         }
       }
       nd[pkids] <- NULL
       id <- seq_along(nd)
       for(i in id) nd[[i]]$id <- i
-      
+
       ## node information
       kids <- lapply(nd, "[[", "kids")
       tmnl <- sapply(kids, is.null)
       check <- sapply(id, function(i) !tmnl[i] && all(tmnl[kids[[i]]]))
     }
-   
-    ## return pruned list 
+
+    ## return pruned list
     return(nd)
   }
 
@@ -684,18 +696,18 @@ mob_partynode <- function(Y, X, Z, weights = NULL, offset = NULL, cluster = NULL
 
   ## prune tree
   if(verbose && !is.null(control$prune)) cat("-- Post-pruning ---------------------------\n")
-  nodes <- mob_prune(nodes)  
+  nodes <- mob_prune(nodes)
   for(i in seq_along(nodes)) {
     if(is.null(nodes[[i]]$kids)) {
-      nodes[[i]]$split <- NULL  
+      nodes[[i]]$split <- NULL
       if(!terminal$estfun) nodes[[i]]$info$estfun <- NULL
-      if(!terminal$object) nodes[[i]]$info$object <- NULL      
+      if(!terminal$object) nodes[[i]]$info$object <- NULL
     } else {
       if(!inner$estfun) nodes[[i]]$info$estfun <- NULL
-      if(!inner$object) nodes[[i]]$info$object <- NULL      
+      if(!inner$object) nodes[[i]]$info$object <- NULL
     }
   }
-  
+
   ## return as partynode
   as.partynode(nodes)
 }
@@ -715,7 +727,7 @@ mob_grow_getlevels <- function(z) {
       ii <- i
       for (l in 1L:nl) {
         indx[i, l] <- ii %% 2L
-	ii <- ii %/% 2L   
+	ii <- ii %/% 2L
       }
     }
     rownames(indx) <- apply(indx, 1L, function(x) paste(levels(z)[x > 0], collapse = "+"))
@@ -737,12 +749,12 @@ mob_control <- function(alpha = 0.05, bonferroni = TRUE, minsize = NULL, maxdept
   ## transform defaults
   if(missing(minsize) & !missing(minsplit))  minsize <- minsplit
   if(missing(minsize) & !missing(minbucket)) minsize <- minbucket
-  
+
   ## no mtry if infinite or non-positive
   if(is.finite(mtry)) {
     mtry <- if(mtry < 1L) Inf else as.integer(mtry)
   }
-  
+
   ## data types for formula processing
   ytype <- match.arg(ytype, c("vector", "data.frame", "matrix"))
   xtype <- match.arg(xtype, c("data.frame", "matrix"))
@@ -821,16 +833,16 @@ refit.modelparty <- function(object, node = NULL, drop = TRUE, ...)
 {
   ## by default use all ids
   if(is.null(node)) node <- nodeids(object)
-  
+
   ## estimated coefficients
   cf <- nodeapply(object, ids = node, FUN = function(n) info_node(n)$coefficients)
-  
+
   ## model.frame
   mf <- model.frame(object)
   weights <- weights(object)
   offset <- model.offset(mf)
   cluster <- mf[["(cluster)"]]
-  
+
   ## fitted ids
   fitted <- object$fitted[["(fitted)"]]
 
@@ -867,10 +879,10 @@ refit.modelparty <- function(object, node = NULL, drop = TRUE, ...)
   } else {
     function(x, index) NULL
   }
-  
+
   ## fitting function
   afit <- object$info$fit
-  
+
   ## refit
   rval <- lapply(seq_along(node), function(i) {
     ix <- fitted %in% nodeids(object, from = node[i], terminal = TRUE)
@@ -883,14 +895,14 @@ refit.modelparty <- function(object, node = NULL, drop = TRUE, ...)
 
   ## drop?
   if(drop & length(rval) == 1L) rval <- rval[[1L]]
-  
+
   ## return
   return(rval)
 }
 
 apply_to_models <- function(object, node = NULL, FUN = NULL, drop = FALSE, ...) {
   if(is.null(node)) node <- nodeids(object, terminal = FALSE)
-  if(is.null(FUN)) FUN <- function(object, ...) object  
+  if(is.null(FUN)) FUN <- function(object, ...) object
   rval <- if("object" %in% object$info$control$terminal) {
     nodeapply(object, node, function(n) FUN(info_node(n)$object))
   } else {
@@ -942,7 +954,7 @@ sctest.modelparty <- function(object, node = NULL, ...)
   ids <- if(is.null(node)) nodeids(object, terminal = FALSE) else node
   rval <- nodeapply(object, ids, function(n) info_node(n)$test)
   names(rval) <- ids
-  if(length(ids) == 1L) rval[[1L]] else rval  
+  if(length(ids) == 1L) rval[[1L]] else rval
 }
 
 print.modelparty <- function(x, node = NULL,
@@ -955,10 +967,10 @@ print.modelparty <- function(x, node = NULL,
     deparse(x$info$call$fit))
 
   if(is.null(node)) {
-    header_panel <- if(header) function(party) {      
+    header_panel <- if(header) function(party) {
       c(title, "", "Model formula:", deparse(party$info$formula), "", "Fitted party:", "")
     } else function(party) ""
-  
+
     footer_panel <- if(footer) function(party) {
       n <- width(party)
       n <- format(c(length(party) - n, n))
@@ -984,7 +996,7 @@ print.modelparty <- function(x, node = NULL,
   } else {
     node <- as.integer(node)
     info <- nodeapply(x, ids = node,
-      FUN = function(n) info_node(n)[c("coefficients", "objfun", "test")])    
+      FUN = function(n) info_node(n)[c("coefficients", "objfun", "test")])
     for(i in seq_along(node)) {
       if(i == 1L) {
         cat(paste(title, "\n", collapse = ""))
@@ -1018,7 +1030,7 @@ predict.modelparty <- function(object, newdata = NULL, type = "node", ...)
   } else {
     type
   }
-  if("newdata" %in% names(formals(pred))) {    
+  if("newdata" %in% names(formals(pred))) {
     ix <- lapply(seq_along(ids), function(i) which(node == ids[i]))
     preds <- lapply(seq_along(ids), function(i)
       pred(mod[[i]], newdata = newdata[ix[[i]], , drop = FALSE], ...))
@@ -1027,7 +1039,7 @@ predict.modelparty <- function(object, newdata = NULL, type = "node", ...)
       matrix(0, nrow = length(node), ncol = nc, dimnames = list(names(node), colnames(preds[[1L]])))
     } else {
       rep(preds[[1L]], length.out = length(node))
-    }      
+    }
     for(i in seq_along(ids)) {
       if(nc > 1L) {
         rval[ix[[i]], ] <- preds[[i]]
@@ -1077,7 +1089,7 @@ fitted.modelparty <- function(object, ...)
     matrix(0, nrow = length(ids), ncol = nc, dimnames = list(names(node), colnames(fit[[1L]])))
   } else {
     rep(fit[[1L]], length.out = length(node))
-  }	 
+  }
   for(i in seq_along(ids)) {
     if(nc > 1L) {
       rval[node == ids[i], ] <- fit[[i]]
@@ -1105,7 +1117,7 @@ residuals.modelparty <- function(object, ...)
     matrix(0, nrow = length(ids), ncol = nc, dimnames = list(names(node), colnames(res[[1L]])))
   } else {
     rep(res[[1L]], length.out = length(node))
-  }	 
+  }
   for(i in seq_along(ids)) {
     if(nc > 1L) {
       rval[node == ids[i], ] <- res[[i]]
@@ -1141,9 +1153,9 @@ prune.lmtree <- function(tree, type = "AIC", ...)
   ## special handling for AIC and BIC
   ptype <- pmatch(tolower(type), c("aic", "bic"), nomatch = 0L)
   if(ptype == 1L) {
-    type <- function(objfun, df, nobs) (nobs[1L] * log(objfun[1L]) + 2 * df[1L]) < (nobs[1L] * log(objfun[2L]) + 2 * df[2L])  
+    type <- function(objfun, df, nobs) (nobs[1L] * log(objfun[1L]) + 2 * df[1L]) < (nobs[1L] * log(objfun[2L]) + 2 * df[2L])
   } else if(ptype == 2L) {
-    type <- function(objfun, df, nobs) (nobs[1L] * log(objfun[1L]) + log(nobs[2L]) * df[1L]) < (nobs[1L] * log(objfun[2L]) + log(nobs[2L]) * df[2L])  
+    type <- function(objfun, df, nobs) (nobs[1L] * log(objfun[1L]) + log(nobs[2L]) * df[1L]) < (nobs[1L] * log(objfun[2L]) + log(nobs[2L]) * df[2L])
   }
   NextMethod()
 }
@@ -1168,23 +1180,23 @@ prune.modelparty <- function(tree, type = "AIC", ...)
     warning("Unknown specification of 'type'")
     return(tree)
   }
-  
+
   ## degrees of freedom
   dfsplit <- tree$info$control$dfsplit
-  
+
   ## turn node to list
   node <- tree$node
   nd <- as.list(node)
-  
+
   ## node information (IDs, kids, ...)
   id <- seq_along(nd)
   kids <- lapply(nd, "[[", "kids")
   tmnl <- sapply(kids, is.null)
-  
+
   ## check nodes that only have terminal kids
   check <- sapply(id, function(i) !tmnl[i] && all(tmnl[kids[[i]]]))
   while(any(check)) {
-    
+
     ## pruning node information
     pnode <- which(check)
     objfun <- sapply(nd, function(x) x$info$objfun)
@@ -1194,23 +1206,23 @@ prune.modelparty <- function(tree, type = "AIC", ...)
       df = c(length(nd[[1]]$info$coefficients), length(kids[[i]]) * length(nd[[1]]$info$coefficients) + as.integer(dfsplit)),
       nobs = c(nd[[i]]$info$nobs, n)
     ))
-    
+
     ## do any nodes need pruning?
     pnode <- pnode[pok]
     if(length(pnode) < 1L) break
-    
+
     ## prune
     tree <- nodeprune.party(tree, ids = pnode)
     node <- tree$node
     nd <- as.list(node)
-    
+
     ## node information
     kids <- lapply(nd, "[[", "kids")
     tmnl <- sapply(kids, is.null)
     id <- seq_along(nd)
     check <- sapply(id, function(i) !tmnl[i] && all(tmnl[kids[[i]]]))
   }
-  
+
   ## return pruned tree
   return(tree)
 }

@@ -1,3 +1,12 @@
+#' Recursive partitioning (also known as trees) based on Rasch models.
+#' for more details see psychotree::raschtree
+#' @param formula A symbolic description of the model to be fit. This should be of type y ~ x1 + x2 where y should be a binary 0/1 item response matrix and x1 and x2 are used as partitioning variables.
+#' @param data a data frame containing the variables in the model.
+#' @param na.action a function which indicates what should happen when the data contain missing values (NAs).
+#' @param reltol arguments passed via raschmodel to optim.
+#' @param deriv character. Which type of derivatives should be used for computing gradient and Hessian matrix? Analytical with sum algorithm ("sum"), analytical with difference algorithm ("diff", faster but numerically unstable), or numerical. Passed to raschmodel.
+#' @param maxit arguments passed via raschmodel to optim.
+#' @param ... arguments passed to the underlying functions, i.e., to mob_control for raschtree, and to the underlying predict and plot methods, respectively.
 ## high-level convenience interface to mob()
 raschtree <- function(formula, data, na.action,
   reltol = 1e-10, deriv = c("sum", "diff", "numeric"), maxit = 100L, ...)
